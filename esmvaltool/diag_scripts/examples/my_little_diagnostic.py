@@ -28,20 +28,41 @@ from esmvaltool.diag_scripts.shared import group_metadata, run_diagnostic
 from esmvalcore.preprocessor import area_statistics
 
 
-def _plot_time_series(cfg, cube, dataset):
+def _plot_time_series(vars_to_plot):
     """
     Example of personal diagnostic plotting function.
 
-    Arguments:
-        cfg - nested dictionary of metadata
-        cube - the cube to plot
-        dataset - name of the dataset to plot
+    Plots a monthly time series of an area-averaged variable 
+    between the ground and first levels. 
 
-    Returns:
-        string; makes some time-series plots
+    Parameters
+    ----------
+    vars_to_plot: list of tuples
+        List containing tuples representing a variable to be plotted.
+        Tuple format: (cfg, cube, dataset), where:
+            * cfg : nested dictionary
+                Nested dictionary of variable metadata.
+            * cube : Iris cube
+                Variable data to plot.
+            * dataset : str
+                Name of the dataset to plot.
 
-    Note: this function is private; remove the '_'
-    so you can make it public.
+    Returns
+    -------
+    None.
+
+    Notes
+    -----
+    * This function is private; remove the '_'
+      so you can make it public.
+
+    Change Log
+    ----------
+    2020-04-28
+      * NumPy-ize documentation style.
+      * Modified arguments to plot multiple variables on one plot.
+    2020-05-04
+      * Remove dummy return value.
     """
     # custom local paths for e.g. plots are supported -
     # here is an example
@@ -49,24 +70,22 @@ def _plot_time_series(cfg, cube, dataset):
     # out_path = 'esmvaltool_users/valeriu/'   # edit as per need
     # local_path = os.path.join(root_dir, out_path)
     # but one can use the already defined esmvaltool output paths
-    local_path = cfg['plot_dir']
-
-    # do the plotting dance
-    plt.plot(cube.data, label=dataset)
+    #local_path = cfg['plot_dir']
+    local_path = '~/emip/output/diagnostics'
+    for var in vars_to_plot:
+        # cube = var[1], dataset = var[2]
+        plt.plot(var[1].data, label=var[2])
     plt.xlabel('Time (months)')
     plt.ylabel('Area average')
     plt.title('Time series at (ground level - first level)')
     plt.tight_layout()
     plt.grid()
     plt.legend()
-    png_name = 'Time_series_' + dataset + '.png'
+    png_name = 'Time_series-my_little_diagnostic.png'
     plt.savefig(os.path.join(local_path, png_name))
     plt.close()
 
-    # no need to brag :)
-    return 'I made some plots!'
-
-
+    
 def run_my_diagnostic(cfg):
     """
     Simple example of a diagnostic.
@@ -88,12 +107,24 @@ def run_my_diagnostic(cfg):
     user-specific metrics can be computed as part of the diagnostic,
     and then plotted in various manners.
 
-    Arguments:
-        cfg - nested dictionary of metadata
+    Parameters
+    ----------
+    cfg - Dictionary
+        Nested dictionary containing dataset names and variables.
 
-    Returns:
-        string; runs the user diagnostic
+    Returns
+    -------
+    None.
 
+    Notes
+    -----
+
+    Change log
+    ----------
+    2020-05-04
+        * NumPy-ize documentation.
+        * Configure to plot multiple variables on one plot.
+        * Pass list containing variable tuples to plotting function. 
     """
     # assemble the data dictionary keyed by dataset name
     # this makes use of the handy group_metadata function that
@@ -101,7 +132,8 @@ def run_my_diagnostic(cfg):
     # keyed on datasets e.g. dict = {'MPI-ESM-LR': [var1, var2...]}
     # where var1, var2 are dicts holding all needed information per variable
     my_files_dict = group_metadata(cfg['input_data'].values(), 'dataset')
-
+    
+    var_list = []
     # iterate over key(dataset) and values(list of vars)
     for key, value in my_files_dict.items():
         # load the cube from data files only
@@ -120,10 +152,11 @@ def run_my_diagnostic(cfg):
         # to apply the area average use a preprocessor function
         # rather than writing your own function
         area_avg_cube = area_statistics(squared_cube, 'mean')
-
-        # finalize your analysis by plotting a time series of the
-        # diffed, squared and area averaged cube; call the plot function:
-        _plot_time_series(cfg, area_avg_cube, key)
+        
+        # Append the cfg, area_avg_cube, and key objects to variable list
+        var_list.append((cfg, area_avg_cube, key))
+        
+    _plot_time_series(var_list)
 
     # that's it, we're done!
     return 'I am done with my first ESMValTool diagnostic!'
