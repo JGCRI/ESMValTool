@@ -71,17 +71,18 @@ def _plot_time_series(vars_to_plot):
     # local_path = os.path.join(root_dir, out_path)
     # but one can use the already defined esmvaltool output paths
     #local_path = cfg['plot_dir']
-    local_path = '~/emip/output/diagnostics'
+    local_path = '/home/nich980/emip/output/diagnostics'
     for var in vars_to_plot:
-        # cube = var[1], dataset = var[2]
+        # cube = var[1], dataset str = var[2]
         plt.plot(var[1].data, label=var[2])
     plt.xlabel('Time (months)')
     plt.ylabel('Area average')
-    plt.title('Time series at (ground level - first level)')
+    plt.title('Time series at ground level')
     plt.tight_layout()
     plt.grid()
     plt.legend()
-    png_name = 'Time_series-my_little_diagnostic.png'
+    #png_name = 'Time_series-my_little_diagnostic.png'
+    png_name = 'time_series-my_little_diagnostic-all_in_one.png'
     plt.savefig(os.path.join(local_path, png_name))
     plt.close()
 
@@ -118,6 +119,9 @@ def run_my_diagnostic(cfg):
 
     Notes
     -----
+    * Since the preprocessor extracts the 1000 hPa level data,
+      the cube's data will have shape (36, 180, 360) corresponding
+      to time (in months), latitude, longitude. 
 
     Change log
     ----------
@@ -140,26 +144,16 @@ def run_my_diagnostic(cfg):
         # using a single variable here so just grab the first (and only)
         # list element
         cube = iris.load_cube(value[0]['filename'])
-
-        # the first data analysis bit: simple cube difference:
-        # perform a difference between ground and first levels
-        diff_cube = cube[:, 0, :, :] - cube[:, 1, :, :]
-        # square the difference'd cube just for fun
-        squared_cube = diff_cube ** 2.
-
-        # the second data analysis bit (slightly more advanced):
-        # compute an area average over the squared cube
-        # to apply the area average use a preprocessor function
-        # rather than writing your own function
-        area_avg_cube = area_statistics(squared_cube, 'mean')
-        
-        # Append the cfg, area_avg_cube, and key objects to variable list
+        print('KEY: {}'.format(key))
+        print('Cube shape: {}'.format(cube.data.shape))
+        print('Cube coords: {}'.format(cube.coords))
+        # compute an area average over the cube using the preprocessor
+        # The cube contains only 100000 Pa level data (see recipe).
+        area_avg_cube = area_statistics(cube, 'mean') 
+        # Append the cfg, area_avg_cube, and key tuple to variable list
         var_list.append((cfg, area_avg_cube, key))
-        
     _plot_time_series(var_list)
-
-    # that's it, we're done!
-    return 'I am done with my first ESMValTool diagnostic!'
+ 
 
 
 if __name__ == '__main__':
