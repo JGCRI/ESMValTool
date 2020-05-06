@@ -1,5 +1,5 @@
 # ESMValTool
-# recipe_python.yml
+# recipe_initial_analysis.yml
 ---
 documentation:
   description: Example recipe that plots the mean precipitation and temperature.
@@ -51,6 +51,6 @@ diagnostics:
         end_year: 2002
     scripts:
       script1:
-        script: examples/my_little_diagnostic.py
+        script: emissions_mip/initial_analysis.py
         quickplot:
           plot_type: pcolormesh
