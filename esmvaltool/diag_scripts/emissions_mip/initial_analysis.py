@@ -1,4 +1,6 @@
 """
+initial_analysis.py
+
 Emissions-MIP inititial analysis diagnostic script. Creates a plot with
 the area-averaged surface temperatures from two CMIP5 models.
 
@@ -6,6 +8,11 @@ The role of this script is to become more familiar with ESMValTool
 and its capabilities.
 
 Modified from diag_scripts/examples/my_little_diagnostic.py
+
+Notes
+-----
+* By default, the area-averaged temperature is returned as a monthly average.
+  * Compute annual average with esmvalcore.preprocessor.annual_statistics(cube, operator='mean')?
 
 Matt Nicholson
 23 April 2020
