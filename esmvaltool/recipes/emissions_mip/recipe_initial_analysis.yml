@@ -2,21 +2,20 @@
 # recipe_initial_analysis.yml
 ---
 documentation:
-  description: Example recipe that plots the mean precipitation and temperature.
+  description: Initial analysis recipe that plots the mean temperature for multiple datasets on one plot.
 
   authors:
-    - andela_bouwe
-    - righi_mattia
+    - nicholson_matthew
 
   maintainer:
-    - schlund_manuel
+    - nicholson_matthew
 
   references:
-    - acknow_project
+    - esmvaltool
 
   projects:
     - esmval
-    - c3s-magic
+    - emissions_mip
 
 datasets:
   - {dataset: CanESM2, project: CMIP5, exp: historical, ensemble: r1i1p1}
@@ -38,7 +37,7 @@ preprocessors:
 diagnostics:
 
   diagnostic1:
-    description: Air temperature and precipitation Python tutorial diagnostic.
+    description: Emissions-MIP initial analysis diagnostic.
     themes:
       - phys
     realms:
