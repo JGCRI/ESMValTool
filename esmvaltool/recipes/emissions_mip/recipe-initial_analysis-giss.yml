@@ -1,0 +1,54 @@
+# ESMValTool
+# recipe-initial_analysis-giss.yml
+---
+documentation:
+  description: Initial analysis of GISS model output.
+
+  authors:
+    - nicholson_matthew
+
+  maintainer:
+    - nicholson_matthew
+
+  references:
+    - esmvaltool
+
+  projects:
+    - esmval
+    - emissions_mip
+
+datasets:
+        - {dataset: GISS-E2-1-G, project: emission_mip, experiment: PiClimSO2, ensemble: r1i1p1}
+
+preprocessors:
+
+  preprocessor1:
+    extract_levels:
+      levels: 100000
+      scheme: nearest
+    regrid:
+      target_grid: 1x1
+      scheme: linear
+    multi_model_statistics:
+      span: overlap
+      statistics: [mean, median]
+
+diagnostics:
+
+  diagnostic1:
+    description: Emissions-MIP initial analysis of GISS model output.
+    themes:
+      - phys
+    realms:
+      - atmos
+    variables:
+      emiso4:
+        preprocessor: preprocessor1
+        mip: AERmon
+        start_year: 2000
+        end_year: 2002
+    scripts:
+      script1:
+        script: emissions_mip/initial_analysis-giss.py
+        quickplot:
+          plot_type: pcolormesh
