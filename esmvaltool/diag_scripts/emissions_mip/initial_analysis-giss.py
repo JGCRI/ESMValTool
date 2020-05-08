@@ -51,31 +51,14 @@ def _plot_time_series(vars_to_plot):
     plt.grid()
     plt.legend()
     #png_name = 'Time_series-my_little_diagnostic.png'
-    png_name = 'time_series-initial_analysis-all_in_one.png'
+    png_name = 'time_series-initial_analysis-giss-all_in_one.png'
     plt.savefig(os.path.join(local_path, png_name))
     plt.close()
 
     
-def run_my_diagnostic(cfg):
+def main(cfg):
     """
-    Simple example of a diagnostic.
-
-    This is a basic (and rather esotherical) diagnostic that firstly
-    loads the needed model data as iris cubes, performs a difference between
-    values at ground level and first vertical level, then squares the
-    result.
-
-    Before plotting, we grab the squared result (not all operations on cubes)
-    and apply an area average on it. This is a useful example of how to use
-    standard esmvalcore.preprocessor functionality within a diagnostic, and
-    especially after a certain (custom) diagnostic has been run and the user
-    needs to perform an operation that is already part of the preprocessor
-    standard library of functions.
-
-    The user will implement their own (custom) diagnostics, but this
-    example shows that once the preprocessor has finished a whole lot of
-    user-specific metrics can be computed as part of the diagnostic,
-    and then plotted in various manners.
+    Main function. Handles data wrangling and such.
 
     Parameters
     ----------
@@ -91,24 +74,17 @@ def run_my_diagnostic(cfg):
     * Since the preprocessor extracts the 1000 hPa level data,
       the cube's data will have shape (36, 180, 360) corresponding
       to time (in months), latitude, longitude. 
-
-    Change log
-    ----------
-    2020-05-04
-        * NumPy-ize documentation.
-        * Configure to plot multiple variables on one plot.
-        * Pass list containing variable tuples to plotting function. 
     """
     # assemble the data dictionary keyed by dataset name
     # this makes use of the handy group_metadata function that
     # orders the data by 'dataset'; the resulting dictionary is
     # keyed on datasets e.g. dict = {'MPI-ESM-LR': [var1, var2...]}
     # where var1, var2 are dicts holding all needed information per variable
-    my_files_dict = group_metadata(cfg['input_data'].values(), 'dataset')
+    file_dict = group_metadata(cfg['input_data'].values(), 'dataset')
     
     var_list = []
     # iterate over key(dataset) and values(list of vars)
-    for key, value in my_files_dict.items():
+    for key, value in file_dict.items():
         # load the cube from data files only
         # using a single variable here so just grab the first (and only)
         # list element
@@ -129,5 +105,4 @@ if __name__ == '__main__':
     # always use run_diagnostic() to get the config (the preprocessor
     # nested dictionary holding all the needed information)
     with run_diagnostic() as config:
-        # list here the functions that need to run
-        run_my_diagnostic(config)
+        main(config)
