@@ -627,7 +627,7 @@ projects:
   dlrveu: DLR project VEU
   dlrveu2: DLR project VEU2
   embrace: EU FP7 project EMBRACE
-  emissions_mip: Emissions-MIP
+  EmissMIP: Emissions-MIP
   esmval: DLR project ESMVal
   eval4cmip: DLR and University of Bremen project funded by the Initiative and Networking Fund of the Helmholtz Society
   ewatercycle: eWaterCycle project
