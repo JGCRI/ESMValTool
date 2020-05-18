@@ -18,7 +18,10 @@ documentation:
     - emissions_mip
 
 datasets:
-        - {dataset: GISS-E2-1-G, project: emission_mip, experiment: PiClimSO2, ensemble: r1i1p1}
+        - {dataset: GISS-E2-1-G, project: emissions_mip, experiment: reference, ensemble: r1i1p5f}
+        - {dataset: GISS-E2-1-G, project: emissions_mip, experiment: season-so2, ensemble: r1i1p5f}
+        - {dataset: GISS-E2-1-G-nudge, project: emissions_mip, experiment: reference, ensemble: r1i1p5f}
+        - {dataset: GISS-E2-1-G-nudge, project: emissions_mip, experiment: season-so2, ensemble: r1i1p5f} 
 
 preprocessors:
 
