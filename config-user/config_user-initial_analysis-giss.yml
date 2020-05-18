@@ -5,7 +5,7 @@
 
 # Rootpaths to the data from different projects (lists are also possible)
 rootpath:
-  CMIP6: [~/emip/input/AerChemMIP]
+  CMIP6: [~/emip/input]
   default: ~/emip/input
 
 # Directory structure for input data: [default]/BADC/DKRZ/ETHZ/etc

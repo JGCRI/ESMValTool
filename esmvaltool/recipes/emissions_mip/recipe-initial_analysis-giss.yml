@@ -18,17 +18,14 @@ documentation:
     - emissions_mip
 
 datasets:
-        - {dataset: GISS-E2-1-G, project: emissions_mip, experiment: reference, ensemble: r1i1p5f}
-        - {dataset: GISS-E2-1-G, project: emissions_mip, experiment: season-so2, ensemble: r1i1p5f}
-        - {dataset: GISS-E2-1-G-nudge, project: emissions_mip, experiment: reference, ensemble: r1i1p5f}
-        - {dataset: GISS-E2-1-G-nudge, project: emissions_mip, experiment: season-so2, ensemble: r1i1p5f} 
+        - {dataset: GISS-E2-1-G, project: CMIP6, mip: AERmon, exp: piClim-SO2, ensemble: r1i1p5f102, grid: gn} 
 
 preprocessors:
 
   preprocessor1:
-    extract_levels:
-      levels: 100000
-      scheme: nearest
+    #extract_levels:
+      #levels: {cmor_table: CMIP6, coordinate: plev10} 
+      #scheme: nearest
     regrid:
       target_grid: 1x1
       scheme: linear
@@ -45,7 +42,7 @@ diagnostics:
     realms:
       - atmos
     variables:
-      emiso4:
+      emiso2:
         preprocessor: preprocessor1
         mip: AERmon
         start_year: 2000
