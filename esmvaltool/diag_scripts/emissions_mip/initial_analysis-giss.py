@@ -25,6 +25,8 @@ class MetaObj:
         Dataset (or model) that produced the data file.
     * ensemble: str
         'Ensemble' (variant label) of the data file. Used as unique identifier.
+    * level: str
+        Pressure level, if variable is 3-D. 'None' if variable is 2-D.
     * long_name: str
         Variable long name.
     * short_name: str
@@ -52,6 +54,7 @@ class MetaObj:
         self.dataset    = meta_dict['dataset']
         self.end_year   = meta_dict['end_year']
         self.ensemble   = meta_dict['ensemble']
+        self.level      = None
         self.long_name  = meta_dict['long_name']
         self.short_name = meta_dict['short_name']
         self.start_year = meta_dict['start_year']
@@ -99,7 +102,7 @@ def _plot_time_series(vars_to_plot):
             * cube : Iris cube
                 Variable data to plot.
             * cube_meta: MetaObj object
-                MetaObj instance containing key Iris cube metadata..
+                MetaObj instance containing key Iris cube metadata.
 
     Returns
     -------
