@@ -18,20 +18,33 @@ documentation:
     - emissions_mip
 
 datasets:
-        - {dataset: GISS-E2-1-G, project: CMIP6, mip: AERmon, exp: piClim-SO2, ensemble: r1i1p5f102, grid: gn} 
+        - {dataset: GISS-E2-1-G, project: CMIP6, mip: AERmon, exp: piClim-SO2, ensemble: r1i1p5f101, grid: gn}
+        - {dataset: GISS-E2-1-G, project: CMIP6, mip: AERmon, exp: piClim-SO2, ensemble: r1i1p5f102, grid: gn}
+        - {dataset: GISS-E2-1-G, project: CMIP6, mip: AERmon, exp: piClim-SO2, ensemble: r1i1p5f103, grid: gn}
+        - {dataset: GISS-E2-1-G, project: CMIP6, mip: AERmon, exp: piClim-SO2, ensemble: r1i1p5f104, grid: gn} 
 
 preprocessors:
 
-  preprocessor1:
-    #extract_levels:
-      #levels: {cmor_table: CMIP6, coordinate: plev10} 
-      #scheme: nearest
+  preproc_100hPa:
+    extract_levels:
+      levels: 100000 
+      scheme: nearest
     regrid:
       target_grid: 1x1
       scheme: linear
     multi_model_statistics:
       span: overlap
       statistics: [mean, median]
+    annual_statistics:
+      operator: mean
+  
+  preproc_nolev:
+    regrid:
+      target_grid: 1x1
+      scheme: linear
+    annual_statistics:
+      operator: mean
+
 
 diagnostics:
 
@@ -43,10 +56,10 @@ diagnostics:
       - atmos
     variables:
       emiso2:
-        preprocessor: preprocessor1
+        preprocessor: preproc_nolev
         mip: AERmon
         start_year: 2000
-        end_year: 2002
+        end_year: 2014
     scripts:
       script1:
         script: emissions_mip/initial_analysis-giss.py
