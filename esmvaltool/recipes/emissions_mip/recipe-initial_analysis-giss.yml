@@ -18,15 +18,15 @@ documentation:
     - emissions_mip
 
 datasets:
-        - {dataset: GISS-E2-1-G, project: CMIP6, mip: AERmon, exp: piClim-SO2, ensemble: r1i1p5f101, grid: gn}
-        - {dataset: GISS-E2-1-G, project: CMIP6, mip: AERmon, exp: piClim-SO2, ensemble: r1i1p5f102, grid: gn}
-        - {dataset: GISS-E2-1-G, project: CMIP6, mip: AERmon, exp: piClim-SO2, ensemble: r1i1p5f103, grid: gn}
-        - {dataset: GISS-E2-1-G, project: CMIP6, mip: AERmon, exp: piClim-SO2, ensemble: r1i1p5f104, grid: gn}
+        #- {dataset: GISS-E2-1-G, project: CMIP6, mip: AERmon, exp: piClim-SO2, ensemble: r1i1p5f101, grid: gn}
+        #- {dataset: GISS-E2-1-G, project: CMIP6, mip: AERmon, exp: piClim-SO2, ensemble: r1i1p5f102, grid: gn}
+        #- {dataset: GISS-E2-1-G, project: CMIP6, mip: AERmon, exp: piClim-SO2, ensemble: r1i1p5f103, grid: gn}
+        #- {dataset: GISS-E2-1-G, project: CMIP6, mip: AERmon, exp: piClim-SO2, ensemble: r1i1p5f104, grid: gn}
         # ***** Customized EMIP datasets ***** 
-        #- {dataset: GISS-E2-1-G, project: CMIP6, mip: AERmon, exp: season-so2, ensemble: r1i1p5f101, grid: gn}
-        #- {dataset: GISS-E2-1-G, project: CMIP6, mip: AERmon, exp: reference, ensemble: r1i1p5f102, grid: gn}
-        #- {dataset: GISS-E2-1-G-nudge, project: CMIP6, mip: AERmon, exp: reference, ensemble: r1i1p5f103, grid: gn}
-        #- {dataset: GISS-E2-1-G-nudge, project: CMIP6, mip: AERmon, exp: season-so2, ensemble: r1i1p5f104, grid: gn}
+        - {dataset: GISS-base, project: CMIP6, activity: AerChemMIP, institute: NASA-GISS, mip: AERmon, exp: season-so2, ensemble: r1i1p5f101, grid: gn}
+        - {dataset: GISS-base, project: CMIP6, activity: AerChemMIP, institute: NASA-GISS, mip: AERmon, exp: reference, ensemble: r1i1p5f102, grid: gn}
+        - {dataset: GISS-nudge, project: CMIP6, activity: AerChemMIP, institute: NASA-GISS, mip: AERmon, exp: reference, ensemble: r1i1p5f103, grid: gn}
+        - {dataset: GISS-nudge, project: CMIP6, activity: AerChemMIP, institute: NASA-GISS, mip: AERmon, exp: season-so2, ensemble: r1i1p5f104, grid: gn}
 
 preprocessors:
 

@@ -76,10 +76,10 @@ class MetaObj:
         -------
         None
         """
-        configs = {'r1i1p5f101': {'emip_model': 'GISS-E2-1-G', 'emip_exp': 'season-so2'},
-                   'r1i1p5f102': {'emip_model': 'GISS-E2-1-G', 'emip_exp': 'reference'},
-                   'r1i1p5f103': {'emip_model': 'GISS-E2-1-G-nudge', 'emip_exp': 'reference'},
-                   'r1i1p5f104': {'emip_model': 'GISS-E2-1-G-nudge', 'emip_exp': 'season-so2'}
+        configs = {'r1i1p5f101': {'emip_model': 'GISS-base', 'emip_exp': 'season-so2'},
+                   'r1i1p5f102': {'emip_model': 'GISS-base', 'emip_exp': 'reference'},
+                   'r1i1p5f103': {'emip_model': 'GISS-nudge', 'emip_exp': 'reference'},
+                   'r1i1p5f104': {'emip_model': 'GISS-nudge', 'emip_exp': 'season-so2'}
                   }
         self.emip_experiment = configs[self.ensemble]['emip_exp']
         self.emip_model      = configs[self.ensemble]['emip_model']
