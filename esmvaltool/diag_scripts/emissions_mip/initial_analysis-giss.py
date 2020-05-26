@@ -45,7 +45,7 @@ def main(cfg):
     main_log = logging.getLogger('diag_main')
     # Plot configuration dictionary.
     plt_config = {'ggplot'  : True,
-                  'out_dir' : '/home/nich980/emip/output/diagnostics',
+                  'out_dir' : '/home/nich980/emip/output/diagnostics/initial_analysis-giss',
                   'plt_name': 'time_series-initial_analysis-giss-{}.pdf',
                   'time_interval': 'annual',
                   'title'   : 'Annual Area Average - {}'
@@ -60,14 +60,12 @@ def main(cfg):
     for esm_var, dict_list in var_groups.items():
         # Get list of ESMVariable objects.
         var_list = [ESMVariable(var_dict).get_area_statistic('mean') for var_dict in dict_list]
-        # Take the area average of each variable
-        # var_list = [var_obj.get_area_statistic('mean') for var_obj in var_list]
         common_emip_funcs.plot_timeseries(var_list, plt_config)
             
  
 if __name__ == '__main__':
     # Initialize our custom logs
-    log_dir = '/home/nich980/emip/output/logs'
+    log_dir = '/home/nich980/emip/output/logs/initial_analysis-giss'
     common_emip_funcs.init_logger('ESMVariable', log_dir)
     common_emip_funcs.init_logger('diag_main', log_dir)
     # always use run_diagnostic() to get the config (the preprocessor

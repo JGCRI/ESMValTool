@@ -53,6 +53,61 @@ def group_meta_by_var(meta_dict):
     var_groups = {k: list(v) for k, v in groupby(meta_list, lambda d: d['short_name'])}
     return var_groups
     
+    
+def group_vars_diff(var_list):
+    """
+    Group a list of ESMVariable objects for a given variable into base & reference
+    pairs for each parent dataset.
+    
+    Parameters
+    ----------
+    var_list : list of ESMVariable objects
+        List of ESMVariable objects representing the same variable from different
+        model configurations/models. 
+        
+    Return
+    ------
+    dictionary
+        Key : dataset
+        Val : dict
+            Keys: 'ref' or 'pert'
+            Vals: dataset's reference or purturbation ESMVariable objects.
+            
+        Ex: {GISS-base : {'ref' : ESMVariable obj, 'pert' : ESMVariable obj}}
+    """
+    def _add_obj_to_dict(group_dict, var_obj):
+        if var_obj.exp == 'reference':
+            group_dict[var_obj.dataset]['ref'] = var_obj
+        else: 
+            group_dict[var_obj.dataset]['pert'] = var_obj
+        return group_dict
+    groups = {}
+    for obj in var_list:
+        if obj.dataset in groups:
+            _add_obj_to_dict(groups, obj)
+        else:
+            groups[obj.dataset] = {}
+            _add_obj_to_dict(groups, obj)
+    return groups
+    
+
+def get_diff(var_1, var_2):
+    """
+    Take the difference of the Iris cubes in two ESMVariable instances.
+    Computed as var_1 - var_2.
+    
+    Parameters
+    ----------
+    var_1 : ESMVariable object.
+    var_2 : ESMVariable object.
+    
+    Returns
+    -------
+    Iris cube.
+    """
+    diff_cube = var_1.cube - var_2.cube
+    return diff_cube
+
 
 def get_cube_diff(cube_1, cube_2):
     """
@@ -70,7 +125,6 @@ def get_cube_diff(cube_1, cube_2):
     """
     diff_cube = cube_1 - cube_2
     return diff_cube
-
 
           
 # === Plotting Functions =======================================================
@@ -152,18 +206,11 @@ def plot_timeseries_diff(vars_to_plot, plt_config):
     """
     Plot a timeseries of the differences between model configurations for one
     or more variables.
-    
+
     Parameters
     ----------
-    vars_to_plot: list of tuples
-        List containing tuples representing a variable to be plotted.
-        Tuple format: (cfg, cube, cube_meta), where:
-            * cfg : nested dictionary
-                Nested dictionary of variable metadata.
-            * cube : Iris cube
-                Variable data to plot.
-            * cube_meta: MetaObj object
-                MetaObj instance containing key Iris cube metadata.
+    vars_to_plot: list ESMVariable objects
+        List of ESMVariable objects to plot.
     plt_config : Dictionary
         Dictionary containing plot metadata and configuration information.
 
@@ -174,28 +221,35 @@ def plot_timeseries_diff(vars_to_plot, plt_config):
     if plt_config['ggplot']:
         # Use ggplot style (grey background, white grid lines)
         plt.style.use('ggplot')
-    years = calc_year_span(vars_to_plot[0][2].start_year, vars_to_plot[0][2].end_year)
-    for idx, var in enumerate(vars_to_plot):
-        curr_cube = var[1]
-        cube_meta = var[2]
-        curr_label = '{}_{}'.format(cube_meta.emip_model, cube_meta.emip_experiment)
-        plt.plot(years, curr_cube.data, linestyle=PlotStyle.styles[idx],
-                 color=PlotStyle.colors[idx], label=curr_label)
-    units = vars_to_plot[0][2].units
-    var_short = vars_to_plot[0][2].short_name
+    # Use the first object in the list to parse common attributes.
+    years = calc_year_span(vars_to_plot[0].start_year, vars_to_plot[0].end_year)
+    units = vars_to_plot[0].units
+    var_short = vars_to_plot[0].short_name
+    # Get variable diff groups
+    diff_groups = group_vars_diff(vars_to_plot)
+    # Iterate over the variable objects & plot.
+    for idx, (dataset, var_dict) in enumerate(diff_groups.items()):
+        # Diff = perturbation - reference
+        diff_cube = get_diff(var_dict['pert'], var_dict['ref'])
+        plt.plot(years, diff_cube.data, linestyle=PlotStyle.styles[idx],
+                 color=PlotStyle.colors[idx], label=dataset)
     plt.xlabel('Year')
     plt.ylabel('Area average ({})'.format(units))
-    plt.title('Annual Area Average Difference - {}'.format(var_short))
+    plt.title(plt_config['title'].format(var_short))
     plt.tight_layout()
-    if not plt_config['ggplot']:
+    if 'ggplot' in plt_config and not plt_config['ggplot']:
         # Only call when not using ggplot style, otherwise no grid lines will be visible.
         plt.grid()
     plt.legend()
-    try:
-        plt.savefig(os.path.join(plt_config['out_dir'], plt_config['plt_name']))
-    except:
-        plt_name = 'time_series-initial_analysis-giss-all_in_one.pdf'
-        plt.savefig(os.path.join(plt_config['out_dir'], plt_name))
+    if 'out_dir' in plt_config and plt_config['out_dir'] != None:
+        # Only save the plot if 'out_dir' is defined.
+        try:
+            f_name = plt_config['plt_name'].format(var_short)
+            plt.savefig(os.path.join(plt_config['out_dir'], f_name))
+        except:
+            # If a filename for the plot is not given in the plt_config dict, use the default.
+            plt_name = 'time_series-diff-{}-{}.pdf'.format(plt_config['time_interval'].capitalize(), var_short)
+            plt.savefig(os.path.join(plt_config['out_dir'], plt_name))
     plt.close()
     
 
