@@ -37,9 +37,6 @@ preprocessors:
     regrid:
       target_grid: 1x1
       scheme: linear
-    multi_model_statistics:
-      span: overlap
-      statistics: [mean, median]
     annual_statistics:
       operator: mean
   
@@ -60,8 +57,23 @@ diagnostics:
     realms:
       - atmos
     variables:
+      dryso4:
+        preprocessor: preproc_nolev
+        mip: AERmon
+        start_year: 2000
+        end_year: 2014
       emiso2:
         preprocessor: preproc_nolev
+        mip: AERmon
+        start_year: 2000
+        end_year: 2014
+      emiso4:
+        preprocessor: preproc_nolev
+        mip: AERmon
+        start_year: 2000
+        end_year: 2014
+      mmrdust:
+        preprocessor: preproc_100hPa
         mip: AERmon
         start_year: 2000
         end_year: 2014
