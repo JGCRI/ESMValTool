@@ -33,7 +33,7 @@ preprocessors:
   # * Extract variable's 100 hPa (100000 Pa) level.
   # * Regrid on to 1 deg x 1 deg grid.
   # * Compute annual mean.
-  preproc_100hPa:
+  preproc_100hpa:
     extract_levels:
       levels: 100000 
       scheme: nearest
@@ -74,12 +74,6 @@ diagnostics:
         mip: AERmon
         start_year: 2000
         end_year: 2014
-      # Surface flux of black carbon
-      emibc:
-        preprocessor: preproc_nolev
-        mip: AERmon
-        start_year: 2000
-        end_year: 2014
       # Surface flux of SO2
       emiso2:
         preprocessor: preproc_nolev
@@ -100,7 +94,7 @@ diagnostics:
         end_year: 2014
       # Aerosol sulfate mass mixing ratio 
       mmrso4:
-        preprocessor: preproc_100hPa
+        preprocessor: preproc_100hpa
         mip: AERmon
         start_year: 2000
         end_year: 2014
