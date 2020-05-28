@@ -86,40 +86,22 @@ diagnostics:
         mip: AERmon
         start_year: 2000
         end_year: 2014
-      # Aerosol black carbon mass mixing ratio
-      mmrbc:
-        preprocessor: preproc_100hpa
-        mip: AERmon
-        start_year: 2000
-        end_year: 2014
       # Aerosol sulfate mass mixing ratio 
       mmrso4:
         preprocessor: preproc_100hpa
         mip: AERmon
         start_year: 2000
         end_year: 2014
-      # Aerosol optical depth at 550 nm
-      od550aer:
-        preprocessor: preproc_nolev
-        mip: AERmon
-        start_year: 2000
-        end_year: 2014
-      # Aerosol optical depth at 550 nm from sulfate
-      od550so4:
-        preprocessor: preproc_nolev
-        mip: AERmon
-        start_year: 2000
-        end_year: 2014
       # Upwelling longwave flux at top of atmosphere
       rlut:
         preprocessor: preproc_nolev
-        mip: AERmon
+        mip: Amon
         start_year: 2000
         end_year: 2014
       # Upwelling solar flux at top of atmosphere
       rsut:
         preprocessor: preproc_nolev
-        mip: AERmon
+        mip: Amon
         start_year: 2000
         end_year: 2014
       # SO2 volume mixing ratio
