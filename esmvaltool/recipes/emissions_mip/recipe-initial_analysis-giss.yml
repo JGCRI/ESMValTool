@@ -82,7 +82,7 @@ diagnostics:
         end_year: 2014
       # --- SO2 volume mixing ratio --- 
       so2:
-        preprocessor: preproc_nolev
+        preprocessor: preproc_sfc
         mip: AERmon
         start_year: 2000
         end_year: 2014
