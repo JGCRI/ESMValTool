@@ -12,6 +12,7 @@ import os
 import iris
 import logging
 import matplotlib.pyplot as plt
+import numpy as np
 from itertools import groupby, chain
 
 from esmvaltool.diag_scripts.shared import group_metadata, run_diagnostic
@@ -190,15 +191,49 @@ def save_cube(cube, out_file):
         # Iris does not natively support writing to .csv, so conversion to a Pandas
         # Dataframe is needed. Cube must be 2-D or conversion to DF will fail.
         import iris.pandas
-        import pandas as pd
         try:
             df = iris.pandas.as_data_frame(cube, copy=True)
         except ValueError as err:
             raise ValueError("Cube to DataFrame requires 2-D cube, got cube with {} dims".format(cube.ndims))
         else:
             df.to_csv(out_file, sep=',', header=True, index=False)
-          
-          
+
+
+def save_plot_data(var_name, years, var_data, plt_config, plt_type=None):
+    """
+    Write processed variable data to CSV. 
+    
+    Parameters
+    ----------
+    var_name : str
+        Variable short name.
+    years : numpy array of int
+        Array of years corresponding to the variable data.
+    var_data : numpy array of float
+        Variable data array contained within an Iris cube returned by the ESMValTool preprocessor.
+    plt_config : Dictionary
+        Dictionary containing plot metadata and configuration information.
+    plt_type: str, optional
+        Type of plot. If 'diff', model configuration differences (perturbation - reference)
+        will be plotted. Otherwise a normal variable timeseries plot will be created.
+        Default is 'None'.
+        
+    Returns
+    -------
+    str : Path of the CSV file.
+    """
+    import pandas as pd
+    # Combine the years & variable arrays into a Pandas DF to use Pandas csv writing funcs.
+    var_dict = {'year': years, 'value': var_date}
+    df = pd.DataFrame(var_dict, columns=['year', 'value'])
+    f_name = get_default_plot_name(var_name, plt_config, plt_type=plt_type, strp_ext=True)
+    # Append model config & file extension to the filename
+    f_name = '{}-{}.csv'.format(f_name, plt_config['config_alias'])
+    f_out = os.path.join(plt_config['out_dir'], f_name)
+    df.to_csv(f_out, sep=',', header=True, index=False)
+    return f_out
+
+  
 # === Plotting Functions =======================================================
 """
 The plotting functions take a dictionary, "plt_config", as an argument. This
@@ -218,6 +253,8 @@ Key-Value Pairs
     Time interval of the timeseries (i.e., 'monthly', 'annual', 'decadal').
 * Key: 'title', Val: str
     Plot title.
+* Key: 'write_data', Val : bool
+    Determines whether to write the data being plotted to CSV file.
 """
 
 class PlotStyle:
@@ -283,13 +320,21 @@ def plot_timeseries(vars_to_plot, plt_config, plt_type=None):
             diff_cube = get_diff(var_dict['pert'], var_dict['ref'])
             plt.plot(years, diff_cube.data, linestyle=PlotStyle.styles[idx],
                      color=PlotStyle.colors[idx], label=dataset)
-        default_plt_name = 'time_series-diff-{}-{}.pdf'.format(plt_config['time_interval'].capitalize(), var_short)
+            if plt_config['write_data']:
+                # Write var arrays to csv
+                plt_config['config_alias'] = dataset
+                save_plot_data(var_short, years, diff_cube.data, plt_config, plt_type='diff')
+        default_plt_name = get_default_plot_name(var_short, plt_config, plt_type='diff')
     else:
         # Variable timeseries plot.
         for idx, var_obj in enumerate(vars_to_plot):
             plt.plot(years, var_obj.cube.data, linestyle=PlotStyle.styles[idx],
                      color=PlotStyle.colors[idx], label=var_obj.alias)
-        default_plt_name = 'time_series-{}-{}.pdf'.format(plt_config['time_interval'].capitalize(), var_short)
+            if plt_config['write_data']:
+                # Write var arrays to csv
+                plt_config['config_alias'] = var_obj.alias
+                save_plot_data(var_short, years, var_obj.cube.data, plt_config)
+        default_plt_name = get_default_plot_name(var_short, plt_config)
     plt.xlabel('Year')
     plt.ylabel('{} ({})'.format(var_short, units))
     plt.title(plt_config['title'].format(var_long))
@@ -312,56 +357,30 @@ def plot_timeseries(vars_to_plot, plt_config, plt_type=None):
     plt.close()
     
     
-def plot_timeseries_diff1(vars_to_plot, plt_config):
+def get_default_plot_name(var_name, plt_config, plt_type=None, strp_ext=False):
     """
-    Plot a timeseries of the differences between model configurations for one
-    or more variables.
-
+    Construct a default plot filename.
+    
     Parameters
     ----------
-    vars_to_plot: list ESMVariable objects
-        List of ESMVariable objects to plot.
+    var_name : str
+        Name of the variable being plotted.
     plt_config : Dictionary
         Dictionary containing plot metadata and configuration information.
-
-    Returns
-    -------
-    None.
+    plt_type: str, optional
+        Type of plot. If 'diff', model configuration differences (perturbation - reference)
+        will be plotted. Otherwise a normal variable timeseries plot will be created.
+        Default is 'None'.
+    strp_ext : bool, optional.
+        If True, the '.pdf' file extension will be removed from the plot name before
+        returning. Default is False.
     """
-    if plt_config['ggplot']:
-        # Use ggplot style (grey background, white grid lines)
-        plt.style.use('ggplot')
-    # Use the first object in the list to parse common attributes.
-    years = calc_year_span(vars_to_plot[0].start_year, vars_to_plot[0].end_year)
-    units = vars_to_plot[0].units
-    var_short = vars_to_plot[0].short_name
-    # Get variable diff groups
-    diff_groups = group_vars_diff(vars_to_plot)
-    # Iterate over the variable objects & plot.
-    for idx, (dataset, var_dict) in enumerate(diff_groups.items()):
-        # Diff = perturbation - reference
-        diff_cube = get_diff(var_dict['pert'], var_dict['ref'])
-        plt.plot(years, diff_cube.data, linestyle=PlotStyle.styles[idx],
-                 color=PlotStyle.colors[idx], label=dataset)
-    plt.xlabel('Year')
-    plt.ylabel('Area average ({})'.format(units))
-    plt.title(plt_config['title'].format(var_short))
-    plt.tight_layout()
-    if 'ggplot' in plt_config and not plt_config['ggplot']:
-        # Only call when not using ggplot style, otherwise no grid lines will be visible.
-        plt.grid()
-    plt.legend()
-    if 'out_dir' in plt_config and plt_config['out_dir'] != None:
-        # Only save the plot if 'out_dir' is defined.
-        try:
-            f_name = plt_config['plt_name'].format(var_short)
-            plt.savefig(os.path.join(plt_config['out_dir'], f_name))
-        except:
-            # If a filename for the plot is not given in the plt_config dict, use the default.
-            plt_name = 'time_series-diff-{}-{}.pdf'.format(plt_config['time_interval'].capitalize(), var_short)
-            plt.savefig(os.path.join(plt_config['out_dir'], plt_name))
-    plt.close()
-    
+    if plt_type == 'diff':
+        plt_name = 'time_series-diff-{}-{}.pdf'.format(plt_config['time_interval'].capitalize(), var_name)
+    else:
+        plt_name = 'time_series-{}-{}.pdf'.format(plt_config['time_interval'].capitalize(), var_name)
+    return plt_name
+
 
 # === Logger Functions =========================================================
 
@@ -498,4 +517,4 @@ def calc_year_span(year_start, year_end):
         years = [yr for yr in range(year_start, year_end + 1)]
     except:
         years = [yr for yr in range(int(year_start), int(year_end) + 1)]
-    return years
+    return np.asarray(years)
