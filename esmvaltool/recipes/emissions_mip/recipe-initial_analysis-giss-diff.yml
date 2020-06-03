@@ -1,11 +1,11 @@
 # ESMValTool
 # recipe-initial_analysis-giss-diff.yml
 # This recipe uses the initial_analysis-giss-diff.py diagnostic script
-# to plot the differences between perturbation and reference model runs
-# for specific variables. Each variable receives its own plot.
+# to plot the differences between annual averages of perturbation and reference
+# model runs for Amon & AERmon variables. Each variable receives its own plot.
 ---
 documentation:
-  description: Initial analysis of GISS model output.
+  description: Initial analysis of GISS model output for Amon & AERmon variables.
 
   authors:
     - nicholson_matthew
@@ -21,22 +21,24 @@ documentation:
     - emissions_mip
 
 datasets:
-        # ***** Customized EMIP datasets ***** 
-        - {dataset: GISS-base, project: CMIP6, activity: AerChemMIP, institute: NASA-GISS, mip: AERmon, exp: season-so2, ensemble: r1i1p5f101, grid: gn}
-        - {dataset: GISS-base, project: CMIP6, activity: AerChemMIP, institute: NASA-GISS, mip: AERmon, exp: reference, ensemble: r1i1p5f102, grid: gn}
-        - {dataset: GISS-nudge, project: CMIP6, activity: AerChemMIP, institute: NASA-GISS, mip: AERmon, exp: reference, ensemble: r1i1p5f103, grid: gn}
-        - {dataset: GISS-nudge, project: CMIP6, activity: AerChemMIP, institute: NASA-GISS, mip: AERmon, exp: season-so2, ensemble: r1i1p5f104, grid: gn}
+        # ***** Customized EMIP datasets *****
+        # NOTE: Omit `mip` key in order to use both Amon & AERmon variables.
+        - {dataset: GISS-base, project: CMIP6, activity: AerChemMIP, institute: NASA-GISS, exp: season-so2, ensemble: r1i1p5f101, grid: gn}
+        - {dataset: GISS-base, project: CMIP6, activity: AerChemMIP, institute: NASA-GISS, exp: reference, ensemble: r1i1p5f102, grid: gn}
+        - {dataset: GISS-nudge, project: CMIP6, activity: AerChemMIP, institute: NASA-GISS, exp: reference, ensemble: r1i1p5f103, grid: gn}
+        - {dataset: GISS-nudge, project: CMIP6, activity: AerChemMIP, institute: NASA-GISS, exp: season-so2, ensemble: r1i1p5f104, grid: gn}
 
 preprocessors:
   # Preprocessor for variables with a vertical dimension. Ensure variables 
   # using this preprocessor have a vertical dimention or errors may arise.
-  # * Extract variable's 100 hPa (100000 Pa) level.
+  # * Extract variable's 0.949999988079071 (lowest) hybrid sigma pressure level. 
   # * Regrid on to 1 deg x 1 deg grid.
   # * Compute annual mean.
-  preproc_100hpa:
+  preproc_sfc:
     extract_levels:
-      levels: 100000 
-      scheme: nearest
+      levels: 0.949999988079071 
+      scheme: linear_horizontal_extrapolate_vertical
+      coordinate: air_pressure
     regrid:
       target_grid: 1x1
       scheme: linear
@@ -52,66 +54,52 @@ preprocessors:
     annual_statistics:
       operator: mean
 
-
 diagnostics:
-
-  diagnostic1:
-    description: Emissions-MIP Difference of Perturbation and Reference GISS model output.
+  initial_analysis-giss-diff:
+    description: Emissions-MIP Difference of Perturbation and Reference GISS model output for Amon & AERmon variables.
     themes:
       - phys
     realms:
       - atmos
     variables:
-      # Dry deposition rate of black carbon at surface
-      drybc:
-        preprocessor: preproc_nolev
-        mip: AERmon
-        start_year: 2000
-        end_year: 2014
-      # Dry deposition rate of SO4 at surface       
-      dryso4:
-        preprocessor: preproc_nolev
-        mip: AERmon
-        start_year: 2000
-        end_year: 2014
-      # Surface flux of SO2
+      # --- Surface flux of SO2 --- 
       emiso2:
         preprocessor: preproc_nolev
         mip: AERmon
         start_year: 2000
         end_year: 2014
-      # Surface flux of SO4
+      # --- Surface flux of SO4 --- 
       emiso4:
         preprocessor: preproc_nolev
         mip: AERmon
         start_year: 2000
         end_year: 2014
-      # Aerosol sulfate mass mixing ratio 
+      # --- Aerosol sulfate mass mixing ratio --- 
       mmrso4:
-        preprocessor: preproc_100hpa
+        preprocessor: preproc_sfc
         mip: AERmon
         start_year: 2000
         end_year: 2014
-      # Upwelling longwave flux at top of atmosphere
-      rlut:
-        preprocessor: preproc_nolev
-        mip: Amon
-        start_year: 2000
-        end_year: 2014
-      # Upwelling solar flux at top of atmosphere
-      rsut:
-        preprocessor: preproc_nolev
-        mip: Amon
-        start_year: 2000
-        end_year: 2014
-      # SO2 volume mixing ratio
+      # --- SO2 volume mixing ratio --- 
       so2:
         preprocessor: preproc_nolev
         mip: AERmon
         start_year: 2000
         end_year: 2014
+      # --- Upwelling longwave flux at top of atmosphere --- 
+      rlut:
+        preprocessor: preproc_nolev
+        mip: Amon
+        start_year: 2000
+        end_year: 2014
+      # --- Upwelling solar flux at top of atmosphere --- 
+      rsut:
+        preprocessor: preproc_nolev
+        mip: Amon
+        start_year: 2000
+        end_year: 2014
     scripts:
-      script1:
+      initial_analysis-giss-diff:
         script: emissions_mip/initial_analysis-giss-diff.py
         quickplot:
           plot_type: pcolormesh

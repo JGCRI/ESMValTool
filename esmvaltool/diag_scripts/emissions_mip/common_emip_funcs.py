@@ -20,6 +20,40 @@ from esmvalcore.preprocessor import area_statistics
 
 # === Variable Processing Functions ============================================
 
+class Variables:
+    """
+    Simple class to hold some variable metadata.
+    """
+    emiso2 = {'cmor_long_name': 'total emission rate of so2',
+              'cesm_long_name': 'surface flux of so2',
+              'mip': 'AERmon',
+              'ndim': 3}
+    emiso4 = {'cmor_long_name': 'total emission rate of so4',
+              'cesm_long_name': 'surface flux of so4',
+              'mip': 'AERmon',
+              'ndim': 3}
+    mmrso4 = {'cmor_long_name': 'mass mixing ratio of aerosol so4',
+              'cesm_long_name': 'concentration of so4',
+              'mip': 'AERmon',
+              'ndim': 4}
+    emiso2 = {'cmor_long_name': 'total emission rate of so2',
+              'cesm_long_name': 'surface flux of so2',
+              'mip': 'AERmon',
+              'ndim': 3}
+    so2 =    {'cmor_long_name': 'so2 volume mixing ratio',
+              'cesm_long_name': 'so2 concentration',
+              'mip': 'AERmon',
+              'ndim': 4}
+    rlut =   {'cmor_long_name': 'TOA outgoing longwave radiation',
+              'cesm_long_name': 'upwelling longwave flux at TOA',
+              'mip': 'Amon',
+              'ndim': 3}
+    rsut =   {'cmor_long_name': 'TOA outgoing shortwave radiation',
+              'cesm_long_name': 'upwelling solar flux at TOA',
+              'mip': 'Amon',
+              'ndim': 3}
+
+
 def group_meta_by_var(meta_dict):
     """
     Group a dictionary of variable metadata keyed on the variable's dataset into
@@ -126,6 +160,44 @@ def get_cube_diff(cube_1, cube_2):
     diff_cube = cube_1 - cube_2
     return diff_cube
 
+
+# === I/O Functions ============================================================
+
+def save_cube(cube, out_file):
+    """
+    Write an Iris cube to file. 
+    
+    Valid file formats: 
+        * CF netCDF (1.5)
+        * GRIB2
+        * Met Office PP
+        * CSV
+    
+    Parameters
+    ----------
+    cube : Iris cube
+        Iris cube to write to file.
+    out_file : str
+        Name and path of the output file.
+        
+    Returns
+    -------
+    None.
+    """
+    if out_file.endswith('.nc') or out_file.endswith('.grib2') or out_file.endswith('.pp'):
+        iris.save(cube, out_file)
+    elif out_file.endswith('.csv'):
+        # Iris does not natively support writing to .csv, so conversion to a Pandas
+        # Dataframe is needed. Cube must be 2-D or conversion to DF will fail.
+        import iris.pandas
+        import pandas as pd
+        try:
+            df = iris.pandas.as_data_frame(cube, copy=True)
+        except ValueError as err:
+            raise ValueError("Cube to DataFrame requires 2-D cube, got cube with {} dims".format(cube.ndims))
+        else:
+            df.to_csv(out_file, sep=',', header=True, index=False)
+          
           
 # === Plotting Functions =======================================================
 """
@@ -155,8 +227,27 @@ class PlotStyle:
     styles = ['dotted', 'dashed', 'dashdot'] * 2  # Line styles (6)
     colors = ['b', 'g', 'r', 'c', 'm', 'k']       # Line colors (6)
     
+    
+def plot_timeseries_diff(vars_to_plot, plt_config):
+    """
+    Wrapper function for plot_timeseries(). Removes the need for the user to 
+    remember to enter the plt_type keywarg.
+    
+    Parameters
+    ----------
+    vars_to_plot: list ESMVariable objects
+        List of ESMVariable objects to plot.
+    plt_config : Dictionary
+        Dictionary containing plot metadata and configuration information.
+        
+    Returns
+    -------
+    None.
+    """
+    plot_timeseries(vars_to_plot, plt_config, plt_type='diff')
+    
 
-def plot_timeseries(vars_to_plot, plt_config):
+def plot_timeseries(vars_to_plot, plt_config, plt_type=None):
     """
     Plot a simple timeseries for one or more variables.
 
@@ -166,6 +257,10 @@ def plot_timeseries(vars_to_plot, plt_config):
         List of ESMVariable objects to plot.
     plt_config : Dictionary
         Dictionary containing plot metadata and configuration information.
+    plt_type: str, optional
+        Type of plot. If 'diff', model configuration differences (perturbation - reference)
+        will be plotted. Otherwise a normal variable timeseries plot will be created.
+        Default is 'None'. 
 
     Returns
     -------
@@ -178,18 +273,34 @@ def plot_timeseries(vars_to_plot, plt_config):
     years = calc_year_span(vars_to_plot[0].start_year, vars_to_plot[0].end_year)
     units = vars_to_plot[0].units
     var_short = vars_to_plot[0].short_name
+    var_long = getattr(Variables, var_short)['cmor_long_name']
     # Iterate over the variable objects & plot.
-    for idx, var_obj in enumerate(vars_to_plot):
-        plt.plot(years, var_obj.cube.data, linestyle=PlotStyle.styles[idx],
-                 color=PlotStyle.colors[idx], label=var_obj.alias)
+    if plt_type == 'diff':
+        # Model config difference plot.
+        diff_groups = group_vars_diff(vars_to_plot)
+        for idx, (dataset, var_dict) in enumerate(diff_groups.items()):
+            # Diff = perturbation - reference
+            diff_cube = get_diff(var_dict['pert'], var_dict['ref'])
+            plt.plot(years, diff_cube.data, linestyle=PlotStyle.styles[idx],
+                     color=PlotStyle.colors[idx], label=dataset)
+        default_plt_name = 'time_series-diff-{}-{}.pdf'.format(plt_config['time_interval'].capitalize(), var_short)
+    else:
+        # Variable timeseries plot.
+        for idx, var_obj in enumerate(vars_to_plot):
+            plt.plot(years, var_obj.cube.data, linestyle=PlotStyle.styles[idx],
+                     color=PlotStyle.colors[idx], label=var_obj.alias)
+        default_plt_name = 'time_series-{}-{}.pdf'.format(plt_config['time_interval'].capitalize(), var_short)
     plt.xlabel('Year')
-    plt.ylabel('Area average ({})'.format(units))
-    plt.title(plt_config['title'].format(var_short))
+    plt.ylabel('{} ({})'.format(var_short, units))
+    plt.title(plt_config['title'].format(var_long))
     plt.tight_layout()
     if 'ggplot' in plt_config and not plt_config['ggplot']:
         # Only call when not using ggplot style, otherwise no grid lines will be visible.
         plt.grid()
     plt.legend()
+    # Lazy Hack: adjust figure size
+    fig = plt.gcf()
+    fig.set_size_inches(12, 8)
     if 'out_dir' in plt_config and plt_config['out_dir'] != None:
         # Only save the plot if 'out_dir' is defined.
         try:
@@ -197,12 +308,11 @@ def plot_timeseries(vars_to_plot, plt_config):
             plt.savefig(os.path.join(plt_config['out_dir'], f_name))
         except:
             # If a filename for the plot is not given in the plt_config dict, use the default.
-            plt_name = 'time_series-{}-{}.pdf'.format(plt_config['time_interval'].capitalize(), var_short)
-            plt.savefig(os.path.join(plt_config['out_dir'], plt_name))
+            plt.savefig(os.path.join(plt_config['out_dir'], default_plt_name))
     plt.close()
     
     
-def plot_timeseries_diff(vars_to_plot, plt_config):
+def plot_timeseries_diff1(vars_to_plot, plt_config):
     """
     Plot a timeseries of the differences between model configurations for one
     or more variables.
@@ -366,7 +476,7 @@ def log_esmvariable(esm_var, logger):
     obj_log.debug('    Cube shape : {}'.format(cube.data.shape))
     
 
-# === Helper Functions =========================================================  
+# === Util Functions ===========================================================  
 
 def calc_year_span(year_start, year_end):
     """
