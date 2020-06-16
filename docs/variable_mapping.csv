@@ -1,0 +1,31 @@
+﻿AerChemMIP_category,CF_standard_name,CMOR-3_long_name,CMOR-3_var,CMOR-3_units,CESM_long_name,CESM_var,CESM_units
+aermonthly-2d,tendency_of_atmosphere_mass_content_of_elemental_carbon_dry_aerosol_particles_due_to_dry_deposition,dry deposition rate of black carbon aerosol mass,drybc,kg m-2 s-1,dry deposition flux of bc at bottom (grav + turb),bc_a1DDF+bc_c1DDF+bc_a4DDF+bc_c4DDF,kg m-2 s-1
+aermonthly-2d,tendency_of_atmosphere_mass_content_of_dust_dry_aerosol_particles_due_to_dry_deposition,dry deposition rate of dust,drydust,kg m-2 s-1,dry deposition flux of dust at bottom (grav + turb),dst_a1DDF+dst_c1DDF+dst_a3DDF+dst_c3DDF,kg m-2 s-1
+aermonthly-2d,tendency_of_atmosphere_mass_content_of_sulfate_dry_aerosol_particles_due_to_dry_deposition,dry deposition rate of so4,dryso4,kg m-2 s-1,dry deposition flux of so4 at bottom (grav + turb),so4_a1DDF+so4_c1DDF+so4_a2DDF+so4_c2DDF+so4_a3DDF+so4_c3DDF,kg m-2 s-1
+aermonthly-2d,tendency_of_atmosphere_mass_content_of_seasalt_dry_aerosol_particles_due_to_dry_deposition,dry deposition rate of seasalt,dryss,kg m-2 s-1,dry deposition flux of sea salt at bottom (grav + turb),ncl_a1DDF+ncl_c1DDF+ncl_a2DDF+ncl_c2DDF+ncl_a3DDF+ncl_c3DDF,kg m-2 s-1
+aermonthly-2d,tendency_of_atmosphere_mass_content_of_elemental_carbon_dry_aerosol_particles_due_to_wet_deposition,wet deposition rate of black carbon aerosol mass,wetbc,kg m-2 s-1,wet deposition flux of bc at surface,bc_a1SFWET+bc_c1SFWET+bc_a4SFWET+bc_c4SFWET,kg m-2 s-1
+aermonthly-2d,tendency_of_atmosphere_mass_content_of_dust_dry_aerosol_particles_due_to_wet_deposition,wet deposition rate of dust,wetdust,kg m-2 s-1,wet deposition flux of dust at surface,dst_aSFWET+dst_c1SFWET+dst_a3SFWET+dst_c3SFWET,kg m-2 s-1
+aermonthly-2d,tendency_of_atmosphere_mass_content_of_sulfate_dry_aerosol_particles_due_to_wet_deposition,wet deposition rate of so4,wetso4,kg m-2 s-1,wet deposition flux of so4 at surface,so4_a1SFWET+so4_c1SFWET+so4_a2SFWET+so4_c2SFWET+so4_a3SFWET+so4_c3SFWET,kg m-2 s-1
+aermonthly-2d,tendency_of_atmosphere_mass_content_of_seasalt_dry_aerosol_particles_due_to_wet_deposition,wet deposition rate of seasalt,wetss,kg m-2 s-1,wet deposition flux of sea salt at surface,ncl_a1SFWET+ncl_c1SFWET+ncl_a2SFWET+ncl_c2SFWET+ncl_a3SFWET+ncl_c3SFWET,kg m-2 s-1
+aermonthly-2d,tendency_of_atmosphere_mass_content_of_elemental_carbon_dry_aerosol_particles_due_to_emission,emission rate of black carbon aerosol mass,emibc,kg m-2 s-1,surface flux of bc,SFbc_a1+SFbc_a4+bc_a4_CLXF,kg m-2 s-1
+aermonthly-2d,tendency_of_atmosphere_mass_content_of_dust_dry_aerosol_particles_due_to_emission,total emission rate of dust,emidust,kg m-2 s-1,surface flux of dust,SFdst_a1+SFdst_a3,kg m-2 s-1
+aermonthly-2d,tendency_of_atmosphere_mass_content_of_sulfur_dioxide_due_to_emission,total emission rate of so2,emiso2,kg m-2 s-1,surface flux of so2,SFSO2+SO2_CLXF,kg m-2 s-1
+aermonthly-2d,tendency_of_atmosphere_mass_content_of_sulfate_dry_aerosol_particles_due_to_emission,total direct emission rate of so4,emiso4,kg m-2 s-1,surface flux of so4,SFso4_a1+SFso4_a2+SFso4_a3+so4_a1_CLXF+so4_a2_CLXF+so4_a3_CLXF,kg m-2 s-1
+aermonthly-2d,tendency_of_atmosphere_mass_content_of_seasalt_dry_aerosol_particles_due_to_emission,total emission rate of seasalt,emiss,kg m-2 s-1,surface flux of sea salt,SFncl_a1+SFncl_a2+SFncl_a3,kg m-2 s-1
+aermonthly-3d,mass_fraction_of_elemental_carbon_dry_aerosol_particles_in_air,Elemental carbon mass mixing ratio,mmrbc,kg kg-1,concentration of bc,bc_a1+bc_a4+bc_c1+bc_c4,kg kg-1
+aermonthly-3d,mass_fraction_of_dust_dry_aerosol_particles_in_air,Dust aerosol mass mixing ratio,mmrdust,kg kg-1,concentration of dust,dst_a1+dst_a3+dst_c1+dst_c4,kg kg-1
+aermonthly-3d,mass_fraction_of_sulfate_dry_aerosol_particles_in_air,Aerosol sulfate mass mixing ratio,mmrso4,kg kg-1,concentration of so4,so4_a1+so4_c1+so4_a2+so4_c2+so4_a3+so4_c3,kg kg-1
+aermonthly-3d,mass_fraction_of_seasalt_dry_aerosol_particles_in_air,Sea Salt mass mixing ratio,mmrss,kg kg-1,concentration of sea salt,ncl_a1+ncl_c1+ncl_a2+ncl_c2+ncl_a3+ncl_c3,kg kg-1
+aermonthly-3d,mole_fraction_of_sulfur_dioxide_in_air,SO2 volume mixing ratio,so2,mole mole-1,SO2 concentration,SO2,mole mole-1
+aermonthly-2d,atmosphere_optical_thickness_due_to_ambient_aerosol_particles,ambient aerosol optical thickness at 550 nm,od550aer,1,Aerosol optical depth 550 nm,AODVIS,1
+aermonthly-2d,atmosphere_optical_thickness_due_to_sulfate_ambient_aerosol,sulfate aod@550nm,od550so4,1,Aerosol optical depth 550 nm from SO4,AODSO4,1
+aermonthly-2d,atmosphere_optical_thickness_due_to_dust_ambient_aerosol,dust aod@550nm,od550dust,1,Aerosol optical depth 550 nm from dust,AODDUST,1
+aermonthly-2d,atmosphere_optical_thickness_due_to_seasalt_ambient_aerosol,sea salt aod@550nm,od550ss,1,Aerosol optical depth 550 nm from seasalt,AODSS,1
+aermonthly-2d,toa_outgoing_longwave_flux,toa outgoing longwave radiation,rlut,W m-2,Upwelling longwave flux at top of model,FLUT,W m-2
+,,,rlutaf,,,FLUT_d1,
+,,,rlutsaf,,,FLUTC_d1,
+aermonthly-2d,toa_outgoing_shortwave_flux,toa outgoing shortwave radiation,rsut,W m-2,Upwelling solar flux at top of atmosphere,FSUTOA,W m-2
+,,,rsutaf,,,FSUTOA_a1,
+aermonthly-3d,eastward_wind,Eastward Wind,ua,m s-1,Zonal wind,U,m s-1
+aermonthly-3d,northward_wind,Northward Wind,va,m s-1,Meridional wind,V,m s-1
+aermonthly-2d,surface_air_pressure,Surface Air Pressure,ps,Pa,Surface Pressure,PS,Pa
