@@ -81,15 +81,14 @@ Once you have Conda and Julia installed, you can install ESMValTool via the [Con
 
 From your Linux command prompt, activate the Conda environment you wish to install ESMValTool into.
 
-The following command will install the full version of ESMValTool, which requires Python, R, Julia, and NCL to be installed. I've had trouble with this in the past on pic, so I don't recommend it.
-```
-conda install -c esmvalgroup -c conda-forge esmvaltool
-```
-
-
 Users have the option to install a lighter version of ESMValTool that will only run Python and NCL diagnostic scripts, removing the need to install R and Julia. This is the version I've been running with great success. To install this version, activate the Conda environment where you wish to install ESMValTool and enter the command:
 ```
 conda install esmvaltool-python esmvaltool-ncl -c esmvalgroup -c conda-forge
+```
+
+The following command will install the full version of ESMValTool, which requires Python, R, Julia, and NCL to be installed. I've had trouble with this in the past on pic, so I don't recommend it.
+```
+conda install -c esmvalgroup -c conda-forge esmvaltool
 ```
 
 **Note** Pic might go through a few cycles of `Solving environment` before it succeeds. 
