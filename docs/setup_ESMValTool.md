@@ -1,7 +1,7 @@
 # Installing ESMValTool on a Unix-Based System
 [ESMValTool](https://github.com/ESMValGroup/ESMValTool) is a software package that provides diagnostic and performance metrics tools for evaluating Earth system models in CMIP. This document outlines to install ESMValTool on various Unix-based systems through the command line, including the pic HPC cluster. If you aren't provided easy access to an Unix-based system, but have Windows 10, you can still run ESMValTool on your machine via the Windows 10 Linux Subsystem. 
 
-## Installing Windows 10 Linux Subsystem
+### Installing Windows 10 Linux Subsystem
 Since ESMValTool only supports Unix-based systems, you'll have to install and activate the Windows 10 Linux Subsystem on your machine, then use that to install ESMValTool. If you're using a Unix-based system, you can skip this section.
 
 See these articles for how to install and activate the Windows 10 Linux Subsystem:
@@ -47,7 +47,7 @@ Below is a quick walkthrough of how to create a Conda environment:
   **Note**: Unlike above, once a Conda environment is activated, it *can* be deactivated via the normal `conda deactivate` command. This command is preferred over `source deactivate`. 
 
 ## 2. Install Julia
-ESMValTool uses [Julia](https://julialang.org), which is not currently installed as a module on Cori, so we'll have to install it ourselves.
+Some ESMValTool diagnostics use [Julia](https://julialang.org), which is not currently installed as a module on pic, so we'll have to install it ourselves if we wish to run those diagnostics. If you plan on installing a version of ESMValTool that will not run Julia diagnostics, you can skip this section.
 
 1. To download the Julia installation package, navigate to the [Julia downloads page](https://julialang.org/downloads/). Cori runs SUSE Linux Enterprise Server 15, but the `Generic Linux Binaries for x86` installation package will work just fine. Right-click the link and select `copy link address` from the dropdown menu.
 ![julia download](imgs/julia-dl.png)
@@ -79,46 +79,18 @@ ESMValTool uses [Julia](https://julialang.org), which is not currently installed
 ## 3. Install ESMValTool - Conda
 Once you have Conda and Julia installed, you can install ESMValTool via the [Conda installation method](https://esmvaltool.readthedocs.io/en/latest/getting_started/install.html#conda-installation).
 
-From your Linux command prompt, run the following command to install ESMValTool:
+From your Linux command prompt, activate the Conda environment you wish to install ESMValTool into.
+
+The following command will install the full version of ESMValTool, which requires Python, R, Julia, and NCL to be installed. I've had trouble with this in the past on pic, so I don't recommend it.
 ```
 conda install -c esmvalgroup -c conda-forge esmvaltool
 ```
 
 
-
-# Installing ESMValTool on Windows 10
-Since ESMValTool only supports Unix-based systems, you'll have to install and activate the Windows 10 Linux Subsystem on your machine, then use that to install ESMValTool.
-
-## 1. Install the Windows 10 Linux Subsystem
-See these articles for how to install and activate the Windows 10 Linux Subsystem:
-* [Windows Subsystem for Linux Installation Guide for Windows 10](https://docs.microsoft.com/en-us/windows/wsl/install-win10)
-* [How to install Windows 10’s Linux Subsystem on your PC](https://www.onmsft.com/how-to/how-to-install-windows-10s-linux-subsystem-on-your-pc)
-
-## 2. Install Anaconda 
-Once you have your Windows 10 Linux subsystem up and running, you'll need to install [Anaconda](https://www.anaconda.com/distribution/) on to it
-
-1. Navigate to the [Anaconda download page](https://www.anaconda.com/distribution/) page and select `Linux`. Right-click the appropriate download link for your system's hardware, and select `Copy link address` from the dropdown menu (see image below; I'm running 64-bit Windows so I selected `64-Bit x86 Installer`).
-![conda download](imgs/cond-dl.png)
-
-2. Open a Linux command prompt and enter the following:
-   ```
-   wget <copied-conda-url>
-   ```
-
-   This will download the conda installation `.sh` script into your current working directory on your Linux subsystem. 
-
-3. Run the Conda installation script:
-   ```
-   ./Anaconda3-2019.10-Linux-x86_64.sh
-   ```
-   An in-depth guide for installing Conda on Linux can be found [here](https://www.digitalocean.com/community/tutorials/how-to-install-anaconda-on-ubuntu-18-04-quickstart).
-   
-## 3. Install Julia
-See the [Install Julia](#install-julia) section above.
-
-
-## 4. Install ESMValTool - Conda
-See [Install ESMValTool - Conda](#3-install-esmvaltool---conda) above.
+Users have the option to install a lighter version of ESMValTool that will only run Python and NCL diagnostic scripts, removing the need to install R and Julia. This is the version I've been running with great success. To install this version, activate the Conda environment where you wish to install ESMValTool and enter the command:
+```
+conda install esmvaltool-python esmvaltool-ncl -c esmvalgroup -c conda-forge
+```
 
 
 
