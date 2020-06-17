@@ -9,7 +9,6 @@ Matt Nicholson
 """
 import os
 import iris
-import logging
 import matplotlib.pyplot as plt
 
 from esmvaltool.diag_scripts.shared import group_metadata, run_diagnostic
@@ -42,16 +41,15 @@ def main(cfg):
       the cube's data will have shape (36, 180, 360) corresponding
       to time (in months), latitude, longitude. 
     """
-    main_log = logging.getLogger('diag_main')
     # Plot configuration dictionary.
     plt_config = {'ggplot'  : True,
-                  'out_dir' : '/mnt/c/users/nich980/data/emip/output/initial_analysis-giss-diff',
+                  'out_dir' : cfg['plot_dir'],
                   'plt_name': 'time_series-initial_analysis-giss-diff-{}.pdf',
                   'time_interval': 'annual',
-                  'title'   : 'Annual Area Average Difference - {}'
+                  'title'   : 'Annual Area Average Difference - {}',
+                  'write_data': True
                   }
     file_dict = group_metadata(cfg['input_data'].values(), 'dataset')
-    common_emip_funcs.log_meta_dict(file_dict, main_log)
     # Get a dictionary keyed on variable name where the value is a list of 
     # variable metadata dict from the various model configs.    
     var_groups = common_emip_funcs.group_meta_by_var(file_dict)
@@ -64,10 +62,6 @@ def main(cfg):
             
  
 if __name__ == '__main__':
-    # Initialize our custom logs
-    log_dir = '/mnt/c/users/nich980/data/emip/output/initial_analysis-giss-diff'
-    common_emip_funcs.init_logger('ESMVariable', log_dir)
-    common_emip_funcs.init_logger('diag_main', log_dir)
     # always use run_diagnostic() to get the config (the preprocessor
     # nested dictionary holding all the needed information)
     with run_diagnostic() as config:

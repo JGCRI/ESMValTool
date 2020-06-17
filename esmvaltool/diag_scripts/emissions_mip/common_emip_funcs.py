@@ -224,7 +224,7 @@ def save_plot_data(var_name, years, var_data, plt_config, plt_type=None):
     """
     import pandas as pd
     # Combine the years & variable arrays into a Pandas DF to use Pandas csv writing funcs.
-    var_dict = {'year': years, 'value': var_date}
+    var_dict = {'year': years, 'value': var_data}
     df = pd.DataFrame(var_dict, columns=['year', 'value'])
     f_name = get_default_plot_name(var_name, plt_config, plt_type=plt_type, strp_ext=True)
     # Append model config & file extension to the filename
