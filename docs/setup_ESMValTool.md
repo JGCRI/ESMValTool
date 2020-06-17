@@ -1,38 +1,50 @@
-# ESMValTool
-[ESMValTool](https://github.com/ESMValGroup/ESMValTool) is a software package that provides diagnostic and performance metrics tools for evaluating Earth system models in CMIP. However, the current version of ESMValTool only supports Unix(-like) operating systems. If you aren't provided easy access to an Unix-based system, but have Windows 10, there is still hope. 
+# Installing ESMValTool on a Unix-Based System
+[ESMValTool](https://github.com/ESMValGroup/ESMValTool) is a software package that provides diagnostic and performance metrics tools for evaluating Earth system models in CMIP. This document outlines to install ESMValTool on various Unix-based systems through the command line, including the pic HPC cluster. If you aren't provided easy access to an Unix-based system, but have Windows 10, you can still run ESMValTool on your machine via the Windows 10 Linux Subsystem. 
 
-# Installing on NERSC Cori
-PNNL's CESM run outputs are located on the National Energy Research Scientific Computing Center's (NERSC) [Cori supercomputer](https://www.nersc.gov/systems/cori/). Since the directory holding the output for all four EMIP experiments is ~90 GB and Cori has much more computing power than your local machine, it's best to set up ESMValTool on Cori and run it from there.
+## Installing Windows 10 Linux Subsystem
+Since ESMValTool only supports Unix-based systems, you'll have to install and activate the Windows 10 Linux Subsystem on your machine, then use that to install ESMValTool. If you're using a Unix-based system, you can skip this section.
 
-## 1. Configure Conda
-The most straight-forward installation method for ESMValTool is through [Conda](https://esmvaltool.readthedocs.io/en/latest/getting_started/install.html#conda-installation). Both Python and Conda are already [installed on Cori](https://docs.nersc.gov/programming/high-level-environments/python/#anaconda-python).
+See these articles for how to install and activate the Windows 10 Linux Subsystem:
+* [Windows Subsystem for Linux Installation Guide for Windows 10](https://docs.microsoft.com/en-us/windows/wsl/install-win10)
+* [How to install Windows 10’s Linux Subsystem on your PC](https://www.onmsft.com/how-to/how-to-install-windows-10s-linux-subsystem-on-your-pc)
 
-Below is a quick walkthrough of how to create a Conda environment on Cori:
+## 1. Install Conda
+1. Navigate to the [Anaconda download page](https://www.anaconda.com/distribution/) page and select `Linux`. Right-click the appropriate download link for your system's hardware, and select `Copy link address` from the dropdown menu (see image below; I'm running 64-bit Windows so I selected `64-Bit x86 Installer`).
+![conda download](imgs/cond-dl.png)
 
-* Load the Python module
+2. Open a Linux command prompt and enter the following:
+   ```
+   wget <copied-conda-url>
+   ```
+
+   This will download the conda installation `.sh` script into your current working directory on your Linux subsystem. 
+
+3. Run the Conda installation script:
+   ```
+   ./Anaconda3-2019.10-Linux-x86_64.sh
+   ```
+   An in-depth guide for installing Conda on Linux can be found [here](https://www.digitalocean.com/community/tutorials/how-to-install-anaconda-on-ubuntu-18-04-quickstart).
+
+
+Below is a quick walkthrough of how to create a Conda environment:
+* Create a new Conda environment (see [Conda docs](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-with-commands) for more details). We'll name it `esmvaltool`:
   ```
-  module load python
+  conda create -n esmvaltool python=3.6
   ```
-  The default Python module is `python/3.7-anaconda-2019.10`, so loading the Python module loads Conda as well.
   
-* Create a new Conda environment (see [Conda docs](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-with-commands) for more details)
+* Activating your new `esmvaltool` Conda environment via the command line:
   ```
-  conda create -n emip python=3.6
-  ```
-  
-* Activating your new `emip` Conda environment
-  ```
-  source activate emip
+  conda activate esmvaltool
   ```
   
-  **Note**: Normally, Conda environments are activated by the `conda activate <env>` command. However, due to extra security on Cori, Conda environments can only be activated through the `source activate <env>` command. See the [Cori Python docs](https://docs.nersc.gov/programming/high-level-environments/python/#conda-environments) for details
+  **Note**: Normally, Conda environments are activated by the `conda activate <env>` command. However, due to extra security on pic, Conda environments in job scripts can only be activated through the `source activate <env>` command. 
   
-* Deactivating your `emip` Conda environment
+* Deactivating your `esmvaltool` Conda environment
   ```
   conda deactivate
   ```
   
-  **Note**: Unlike above, once a Conda environment is activated, it *can* be deactivated via the normal `conda deactivate` command. This command is preferred over `source deactivate`. See the [Cori Python docs](https://docs.nersc.gov/programming/high-level-environments/python/#conda-environments) for details
+  **Note**: Unlike above, once a Conda environment is activated, it *can* be deactivated via the normal `conda deactivate` command. This command is preferred over `source deactivate`. 
 
 ## 2. Install Julia
 ESMValTool uses [Julia](https://julialang.org), which is not currently installed as a module on Cori, so we'll have to install it ourselves.
@@ -65,7 +77,7 @@ ESMValTool uses [Julia](https://julialang.org), which is not currently installed
 
 
 ## 3. Install ESMValTool - Conda
-Once you have Conda and Julia installed on your Linux subsystem, you can install ESMValTool via the [Conda installation method](https://esmvaltool.readthedocs.io/en/latest/getting_started/install.html#conda-installation).
+Once you have Conda and Julia installed, you can install ESMValTool via the [Conda installation method](https://esmvaltool.readthedocs.io/en/latest/getting_started/install.html#conda-installation).
 
 From your Linux command prompt, run the following command to install ESMValTool:
 ```
