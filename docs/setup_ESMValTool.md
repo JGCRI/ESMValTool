@@ -92,7 +92,16 @@ Users have the option to install a lighter version of ESMValTool that will only 
 conda install esmvaltool-python esmvaltool-ncl -c esmvalgroup -c conda-forge
 ```
 
+**Note** Pic might go through a few cycles of `Solving environment` before it succeeds. 
 
+When prompted whether or not you'd like to proceed with the installation of the Python packages, scroll up to the list of packages that will be installed and ensure the following packages are present:
+```
+esmvalcore
+esmvaltool-ncl
+esmvaltool-python
+ncl
+```
+If they are present, press `y` to proceed with the installation.
 
 # Troubleshooting
 
