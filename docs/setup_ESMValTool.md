@@ -102,6 +102,30 @@ ncl
 ```
 If they are present, press `y` to proceed with the installation.
 
+## 4. Test your ESMValTool Installation
+If ESMValTool installs into your Conda environment without error, you can do a quick check of the install with the following command:
+```
+esmvaltool -h
+```
+
+which should result in a message that looks like the following:
+```
+usage: esmvaltool [-h] [-v] [-c CONFIG_FILE] [-s]
+                  [--max-datasets MAX_DATASETS] [--max-years MAX_YEARS]
+                  [--skip-nonexistent]
+                  [--diagnostics [DIAGNOSTICS [DIAGNOSTICS ...]]]
+                  [--check-level {strict,default,relaxed,ignore}]
+                  recipe
+                  
+ ______________________________________________________________________
+ _____ ____  __  ____     __    _ _____           _
+ | ____/ ___||  \/  \ \   / /_ _| |_   _|__   ___ | |
+ |  _| \___ \| |\/| |\ \ / / _` | | | |/ _ \ / _ \| |
+ | |___ ___) | |  | | \ V / (_| | | | | (_) | (_) | |
+ |_____|____/|_|  |_|  \_/ \__,_|_| |_|\___/ \___/|_|
+ ______________________________________________________________________ 
+```
+
 # Troubleshooting
 
 ## General Installation Failure
