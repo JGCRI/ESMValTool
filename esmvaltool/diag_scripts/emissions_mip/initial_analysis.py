@@ -1,29 +1,26 @@
 """
-Look at this module for guidance how to write your own.
+initial_analysis.py
 
-Read the README_PERSONAL_DIAGNOSTIC file associated with this example;
+Emissions-MIP inititial analysis diagnostic script. Creates a plot with
+the area-averaged surface temperatures from two CMIP5 models.
 
-Module for personal diagnostics (example).
-Internal imports from exmvaltool work e.g.:
+The role of this script is to become more familiar with ESMValTool
+and its capabilities.
 
-from esmvalcore.preprocessor import regrid
-from esmvaltool.diag_scripts.shared.supermeans import get_supermean
+Modified from diag_scripts/examples/my_little_diagnostic.py
 
-Pipe output through logger;
+Notes
+-----
+* By default, the area-averaged temperature is returned as a monthly average.
+  * Compute annual average with esmvalcore.preprocessor.annual_statistics(cube, operator='mean')?
 
-Please consult the documentation for help with esmvaltool's functionalities
-and best coding practices.
+Matt Nicholson
+23 April 2020
 """
-# place your module imports here:
-
-# operating system manipulations (e.g. path constructions)
 import os
-
-# to manipulate iris cubes
 import iris
 import matplotlib.pyplot as plt
 
-# import internal esmvaltool modules here
 from esmvaltool.diag_scripts.shared import group_metadata, run_diagnostic
 from esmvalcore.preprocessor import area_statistics
 
@@ -64,13 +61,8 @@ def _plot_time_series(vars_to_plot):
     2020-05-04
       * Remove dummy return value.
     """
-    # custom local paths for e.g. plots are supported -
-    # here is an example
-    # root_dir = '/group_workspaces/jasmin2/cmip6_prep/'  # edit as per need
-    # out_path = 'esmvaltool_users/valeriu/'   # edit as per need
-    # local_path = os.path.join(root_dir, out_path)
-    # but one can use the already defined esmvaltool output paths
-    #local_path = cfg['plot_dir']
+    # Plot output directory can be created dynamically,
+    # but is hard-coded for now.
     local_path = '/home/nich980/emip/output/diagnostics'
     for var in vars_to_plot:
         # cube = var[1], dataset str = var[2]
@@ -82,7 +74,7 @@ def _plot_time_series(vars_to_plot):
     plt.grid()
     plt.legend()
     #png_name = 'Time_series-my_little_diagnostic.png'
-    png_name = 'time_series-my_little_diagnostic-all_in_one.png'
+    png_name = 'time_series-initial_analysis-all_in_one.png'
     plt.savefig(os.path.join(local_path, png_name))
     plt.close()
 
