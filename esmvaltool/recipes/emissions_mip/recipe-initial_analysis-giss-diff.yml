@@ -7,11 +7,11 @@
 documentation:
   description: Initial analysis of GISS model output for Amon & AERmon variables.
 
-  authors:
-    - nicholson_matthew
+  # authors:
+  #  - nicholson_matthew
 
-  maintainer:
-    - nicholson_matthew
+  # maintainer:
+  #  - nicholson_matthew
 
   references:
     - esmvaltool
