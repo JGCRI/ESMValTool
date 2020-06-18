@@ -5,8 +5,8 @@
 
 # Rootpaths to the data from different projects (lists are also possible)
 rootpath:
-  CMIP6: [~/emip/input/GISS-EMIP]
-  default: ~/emip/input
+  CMIP6: [../../input]
+  default: ../../input
 
 # Directory structure for input data: [default]/BADC/DKRZ/ETHZ/etc
 # See config-developer.yml for definitions.
@@ -23,7 +23,7 @@ drs:
 max_parallel_tasks: null
 
 # Destination directory
-output_dir: ~/emip/output/recipe-intial_analysis-giss
+output_dir: ../../output
 
 # Auxiliary data directory (used for some additional datasets)
 auxiliary_data_dir: ./auxiliary_data
