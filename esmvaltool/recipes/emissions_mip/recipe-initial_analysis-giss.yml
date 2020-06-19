@@ -100,6 +100,6 @@ diagnostics:
         end_year: 2014
     scripts:
       initial_analysis-giss:
-        script: emissions_mip/initial_analysis-giss.py
+        script: /pic/projects/GCAM/mnichol/emip/ESMValTool/esmvaltool/diag_scripts/emissions_mip/initial_analysis-giss.py
         quickplot:
           plot_type: pcolormesh
