@@ -21,7 +21,7 @@ documentation:
     - emissions_mip
 
 datasets:
-        # ***** Customized EMIP datasets ***** 
+        # ***** Customized EMIP datasets *****
         # NOTE: Omit `mip` key in order to use both Amon & AERmon variables.
         - {dataset: GISS-base, project: CMIP6, activity: AerChemMIP, institute: NASA-GISS, exp: season-so2, ensemble: r1i1p5f101, grid: gn}
         - {dataset: GISS-base, project: CMIP6, activity: AerChemMIP, institute: NASA-GISS, exp: reference, ensemble: r1i1p5f102, grid: gn}
@@ -36,7 +36,7 @@ preprocessors:
   # * Compute annual mean.
   preproc_sfc:
     extract_levels:
-      levels: 0.949999988079071 
+      levels: 0.949999988079071
       scheme: linear_horizontal_extrapolate_vertical
       coordinate: air_pressure
     regrid:
@@ -46,17 +46,20 @@ preprocessors:
       operator: mean
   # Preprocessor for variables with no vertical dimension.
   # * Regrid onto 1 deg x 1 deg grid.
-  # * Compute annual mean. 
+  # * Compute annual mean.
   preproc_nolev:
     regrid:
       target_grid: 1x1
       scheme: linear
     annual_statistics:
       operator: mean
+  preproc_mask:
+    mask_landsea:
+      mask_out: sea
 
 diagnostics:
-  initial_analysis-giss:
-    description: Emissions-MIP initial analysis of GISS model output for Amon & AERmon variables.
+  nudge_vs_freerun_analysis_landonly:
+    description: Emissions-MIP initial analysis of model output for Amon & AERmon variables.
     themes:
       - phys
     realms:
@@ -68,38 +71,38 @@ diagnostics:
         mip: AERmon
         start_year: 2000
         end_year: 2014
-      # --- Surface flux of SO4 --- 
+      # --- Surface flux of SO4 ---
       emiso4:
         preprocessor: preproc_nolev
         mip: AERmon
         start_year: 2000
         end_year: 2014
-      # --- Aerosol sulfate mass mixing ratio --- 
+      # --- Aerosol sulfate mass mixing ratio ---
       mmrso4:
         preprocessor: preproc_sfc
         mip: AERmon
         start_year: 2000
         end_year: 2014
-      # --- SO2 volume mixing ratio --- 
+      # --- SO2 volume mixing ratio ---
       so2:
         preprocessor: preproc_sfc
         mip: AERmon
         start_year: 2000
         end_year: 2014
-      # --- Upwelling longwave flux at top of atmosphere --- 
+      # --- Upwelling longwave flux at top of atmosphere ---
       rlut:
         preprocessor: preproc_nolev
         mip: Amon
         start_year: 2000
         end_year: 2014
-      # --- Upwelling solar flux at top of atmosphere --- 
+      # --- Upwelling solar flux at top of atmosphere ---
       rsut:
         preprocessor: preproc_nolev
         mip: Amon
         start_year: 2000
         end_year: 2014
     scripts:
-      initial_analysis-giss:
-        script: /pic/projects/GCAM/mnichol/emip/ESMValTool/esmvaltool/diag_scripts/emissions_mip/initial_analysis-giss.py
+      nudge_vs_freerun_analysis_landonly:
+        script: /pic/projects/GCAM/mnichol/emip/ESMValTool/esmvaltool/diag_scripts/emissions_mip/basic_emip_analysis.py
         quickplot:
           plot_type: pcolormesh
