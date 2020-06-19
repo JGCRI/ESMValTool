@@ -2,7 +2,7 @@
 Python 3.6
 common_emip_funcs.py
 
-Common functions used in ESMValTool diagnostic scripts as part of the 
+Common functions used in ESMValTool diagnostic scripts as part of the
 Emissions-MIP (EMIP) project.
 
 Matt Nicholson
@@ -59,17 +59,17 @@ def group_meta_by_var(meta_dict):
     """
     Group a dictionary of variable metadata keyed on the variable's dataset into
     a dictionary keyed on the name of the variable.
-    
+
     Parameters
     ----------
     meta_dict : Dictionary
         Dictionary returned by the ESMValTool preprocessor.
-        Key: str 
+        Key: str
             Dataset name.
         Val: list of dict
             List of variable metadata dictionaries belonging to the dataset.
             Each dataset variable gets its own dictionary.
-            
+
     Returns
     -------
     Dictionary
@@ -77,29 +77,29 @@ def group_meta_by_var(meta_dict):
             Name of the variable
         Val: list of dict
             Variable metadata from different model runs/configurations contained
-            in the original prepreocessor metadata dictionary. 
+            in the original prepreocessor metadata dictionary.
     """
     # Get list of every value dictionary
     meta_list = list(chain.from_iterable(list(meta_dict.values())))
 
     # Get dict from list keyed on variable. List of dictionaries must be sorted
-    # by the 'group-by' value in order to work properly. 
+    # by the 'group-by' value in order to work properly.
     meta_list.sort(key=lambda x: x['short_name'])
     var_groups = {k: list(v) for k, v in groupby(meta_list, lambda d: d['short_name'])}
     return var_groups
-    
-    
+
+
 def group_vars_diff(var_list):
     """
     Group a list of ESMVariable objects for a given variable into base & reference
     pairs for each parent dataset.
-    
+
     Parameters
     ----------
     var_list : list of ESMVariable objects
         List of ESMVariable objects representing the same variable from different
-        model configurations/models. 
-        
+        model configurations/models.
+
     Return
     ------
     dictionary
@@ -107,13 +107,13 @@ def group_vars_diff(var_list):
         Val : dict
             Keys: 'ref' or 'pert'
             Vals: dataset's reference or purturbation ESMVariable objects.
-            
+
         Ex: {GISS-base : {'ref' : ESMVariable obj, 'pert' : ESMVariable obj}}
     """
     def _add_obj_to_dict(group_dict, var_obj):
         if var_obj.exp == 'reference':
             group_dict[var_obj.dataset]['ref'] = var_obj
-        else: 
+        else:
             group_dict[var_obj.dataset]['pert'] = var_obj
         return group_dict
     groups = {}
@@ -124,18 +124,18 @@ def group_vars_diff(var_list):
             groups[obj.dataset] = {}
             _add_obj_to_dict(groups, obj)
     return groups
-    
+
 
 def get_diff(var_1, var_2):
     """
     Take the difference of the Iris cubes in two ESMVariable instances.
     Computed as var_1 - var_2.
-    
+
     Parameters
     ----------
     var_1 : ESMVariable object.
     var_2 : ESMVariable object.
-    
+
     Returns
     -------
     Iris cube.
@@ -146,14 +146,14 @@ def get_diff(var_1, var_2):
 
 def get_cube_diff(cube_1, cube_2):
     """
-    Take the difference of two Iris data cubes. 
+    Take the difference of two Iris data cubes.
     Computed as cube_1 - cube_2.
-    
+
     Parameters
     ----------
     cube_1 : Iris cube.
     cube_2 : Iris cube.
-    
+
     Return
     ------
     Iris cube containing the difference of cube_1 - cube_2
@@ -166,21 +166,21 @@ def get_cube_diff(cube_1, cube_2):
 
 def save_cube(cube, out_file):
     """
-    Write an Iris cube to file. 
-    
-    Valid file formats: 
+    Write an Iris cube to file.
+
+    Valid file formats:
         * CF netCDF (1.5)
         * GRIB2
         * Met Office PP
         * CSV
-    
+
     Parameters
     ----------
     cube : Iris cube
         Iris cube to write to file.
     out_file : str
         Name and path of the output file.
-        
+
     Returns
     -------
     None.
@@ -201,8 +201,8 @@ def save_cube(cube, out_file):
 
 def save_plot_data(var_name, years, var_data, plt_config, plt_type=None):
     """
-    Write processed variable data to CSV. 
-    
+    Write processed variable data to CSV.
+
     Parameters
     ----------
     var_name : str
@@ -217,7 +217,7 @@ def save_plot_data(var_name, years, var_data, plt_config, plt_type=None):
         Type of plot. If 'diff', model configuration differences (perturbation - reference)
         will be plotted. Otherwise a normal variable timeseries plot will be created.
         Default is 'None'.
-        
+
     Returns
     -------
     str : Path of the CSV file.
@@ -233,7 +233,7 @@ def save_plot_data(var_name, years, var_data, plt_config, plt_type=None):
     df.to_csv(f_out, sep=',', header=True, index=False)
     return f_out
 
-  
+
 # === Plotting Functions =======================================================
 """
 The plotting functions take a dictionary, "plt_config", as an argument. This
@@ -242,7 +242,7 @@ dictionary contains metadata and configuration information for the plotting func
 Key-Value Pairs
 ---------------
 * Key: 'ggplot', Val: bool
-    Determines whether or not to use the ggplot stylesheet (grey background and 
+    Determines whether or not to use the ggplot stylesheet (grey background and
     white grid lines, among other things).
 * Key: 'out_dir', Val: str
     Plot output directory. This is where the plot will be saved. If not given,
@@ -263,26 +263,26 @@ class PlotStyle:
     """
     styles = ['dotted', 'dashed', 'dashdot'] * 2  # Line styles (6)
     colors = ['b', 'g', 'r', 'c', 'm', 'k']       # Line colors (6)
-    
-    
+
+
 def plot_timeseries_diff(vars_to_plot, plt_config):
     """
-    Wrapper function for plot_timeseries(). Removes the need for the user to 
+    Wrapper function for plot_timeseries(). Removes the need for the user to
     remember to enter the plt_type keywarg.
-    
+
     Parameters
     ----------
     vars_to_plot: list ESMVariable objects
         List of ESMVariable objects to plot.
     plt_config : Dictionary
         Dictionary containing plot metadata and configuration information.
-        
+
     Returns
     -------
     None.
     """
     plot_timeseries(vars_to_plot, plt_config, plt_type='diff')
-    
+
 
 def plot_timeseries(vars_to_plot, plt_config, plt_type=None):
     """
@@ -297,7 +297,7 @@ def plot_timeseries(vars_to_plot, plt_config, plt_type=None):
     plt_type: str, optional
         Type of plot. If 'diff', model configuration differences (perturbation - reference)
         will be plotted. Otherwise a normal variable timeseries plot will be created.
-        Default is 'None'. 
+        Default is 'None'.
 
     Returns
     -------
@@ -324,7 +324,7 @@ def plot_timeseries(vars_to_plot, plt_config, plt_type=None):
                 # Write var arrays to csv
                 plt_config['config_alias'] = dataset
                 save_plot_data(var_short, years, diff_cube.data, plt_config, plt_type='diff')
-        default_plt_name = get_default_plot_name(var_short, plt_config, plt_type='diff')
+        default_plt_name = get_default_plot_name(var_short, plt_config, plt_type='diff') + ".pdf"
     else:
         # Variable timeseries plot.
         for idx, var_obj in enumerate(vars_to_plot):
@@ -334,7 +334,7 @@ def plot_timeseries(vars_to_plot, plt_config, plt_type=None):
                 # Write var arrays to csv
                 plt_config['config_alias'] = var_obj.alias
                 save_plot_data(var_short, years, var_obj.cube.data, plt_config)
-        default_plt_name = get_default_plot_name(var_short, plt_config)
+        default_plt_name = get_default_plot_name(var_short, plt_config) + ".pdf"
     plt.xlabel('Year')
     plt.ylabel('{} ({})'.format(var_short, units))
     plt.title(plt_config['title'].format(var_long))
@@ -355,12 +355,12 @@ def plot_timeseries(vars_to_plot, plt_config, plt_type=None):
             # If a filename for the plot is not given in the plt_config dict, use the default.
             plt.savefig(os.path.join(plt_config['out_dir'], default_plt_name))
     plt.close()
-    
-    
+
+
 def get_default_plot_name(var_name, plt_config, plt_type=None, strp_ext=False):
     """
     Construct a default plot filename.
-    
+
     Parameters
     ----------
     var_name : str
@@ -376,9 +376,9 @@ def get_default_plot_name(var_name, plt_config, plt_type=None, strp_ext=False):
         returning. Default is False.
     """
     if plt_type == 'diff':
-        plt_name = 'time_series-diff-{}-{}.pdf'.format(plt_config['time_interval'].capitalize(), var_name)
+        plt_name = 'time_series-diff-{}-{}'.format(plt_config['time_interval'].capitalize(), var_name)
     else:
-        plt_name = 'time_series-{}-{}.pdf'.format(plt_config['time_interval'].capitalize(), var_name)
+        plt_name = 'time_series-{}-{}'.format(plt_config['time_interval'].capitalize(), var_name)
     return plt_name
 
 
@@ -387,14 +387,14 @@ def get_default_plot_name(var_name, plt_config, plt_type=None, strp_ext=False):
 def nuke_logs(log_dir, target=None):
     """
     Remove any existing logs from the logs/ subdirectory
-    
+
     Parameters
     -----------
     log_dir : str
         Path to the log directory
     target : str, optional
-        Target log file to delete. If not given, all log files in the directory 
-        are deleted. Default is 'None'. 
+        Target log file to delete. If not given, all log files in the directory
+        are deleted. Default is 'None'.
     """
     if target:
         if not target.endswith('.log'):
@@ -412,7 +412,7 @@ def nuke_logs(log_dir, target=None):
 def init_logger(log_name, log_dir, level='debug'):
     """
     Initialize a new logger.
-    
+
     Parameters
     ----------
     log_name : str
@@ -421,7 +421,7 @@ def init_logger(log_name, log_dir, level='debug'):
         Directory to write the log file to.
     level : str
         String representing the logging log level.
-    
+
     Return
     -------
     logger : logging.Logger object
@@ -432,29 +432,29 @@ def init_logger(log_name, log_dir, level='debug'):
                   'error': logging.ERROR,
                   'critical': logging.CRITICAL
                   }
-                  
+
     nuke_logs(log_dir, target=log_name)
-    
+
     if not os.path.isdir(log_dir):
         os.mkdir(log_dir)
-    
+
     log_path = os.path.join(log_dir, log_name + '.log')
     log_format = logging.Formatter("%(asctime)s %(levelname)6s: %(message)s", "%Y-%m-%d %H:%M:%S")
     handler = logging.FileHandler(log_path)
     handler.setFormatter(log_format)
-    
+
     logger = logging.getLogger(log_name)
     logger.setLevel(log_levels[level])
     logger.addHandler(handler)
     logger.info("Log created!\n")
     return logger
-    
+
 
 def log_meta_dict(meta_dict, logger):
     """
-    Write the metadata dictionary returned by the preprocessor to the 
+    Write the metadata dictionary returned by the preprocessor to the
     diagnostic main log file.
-    
+
     Parameters
     ----------
     meta_dict : dictionary of {str: [dict]}.
@@ -462,7 +462,7 @@ def log_meta_dict(meta_dict, logger):
         metadata.
     logger : logging.Logger object
         Logger object representing the log file to write to.
-        
+
     Returns
     -------
     None.
@@ -476,13 +476,13 @@ def log_meta_dict(meta_dict, logger):
 def log_esmvariable(esm_var, logger):
     """
     Write information about an ESMVariable object to ESMVariable log file.
-    
+
     Parameters
     ----------
     esm_var : ESMVariable object
     logger : logging.Logger object
         Logger object representing the log file to write to.
-        
+
     Returns
     -------
     None.
@@ -493,21 +493,21 @@ def log_esmvariable(esm_var, logger):
     for attr in attrs:
         obj_log.debug('    {} : {}'.format(attr, getattr(self, attr)))
     obj_log.debug('    Cube shape : {}'.format(cube.data.shape))
-    
 
-# === Util Functions ===========================================================  
+
+# === Util Functions ===========================================================
 
 def calc_year_span(year_start, year_end):
     """
     Calculate a span of years (inclusive) given a start and end year.
-    
+
     Parameters
     ----------
     year_start: int
         First year.
     year_end: int
         Last year.
-    
+
     Returns
     -------
     List of int
