@@ -44,6 +44,8 @@ preprocessors:
       scheme: linear
     annual_statistics:
       operator: mean
+    mask_landsea:
+      mask_out: sea
   # Preprocessor for variables with no vertical dimension.
   # * Regrid onto 1 deg x 1 deg grid.
   # * Compute annual mean.
@@ -53,7 +55,6 @@ preprocessors:
       scheme: linear
     annual_statistics:
       operator: mean
-  preproc_mask:
     mask_landsea:
       mask_out: sea
 
