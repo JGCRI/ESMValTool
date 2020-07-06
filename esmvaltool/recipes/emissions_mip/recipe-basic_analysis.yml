@@ -23,10 +23,10 @@ documentation:
 datasets:
         # ***** Customized EMIP datasets *****
         # NOTE: Omit `mip` key in order to use both Amon & AERmon variables.
-        - {dataset: GISS-base, project: CMIP6, activity: AerChemMIP, institute: NASA-GISS, exp: season-so2, ensemble: r1i1p5f101, grid: gn}
         - {dataset: GISS-base, project: CMIP6, activity: AerChemMIP, institute: NASA-GISS, exp: reference, ensemble: r1i1p5f102, grid: gn}
-        - {dataset: GISS-nudge, project: CMIP6, activity: AerChemMIP, institute: NASA-GISS, exp: reference, ensemble: r1i1p5f103, grid: gn}
-        - {dataset: GISS-nudge, project: CMIP6, activity: AerChemMIP, institute: NASA-GISS, exp: season-so2, ensemble: r1i1p5f104, grid: gn}
+        - {dataset: GISS-base, project: CMIP6, activity: AerChemMIP, institute: NASA-GISS, exp: no-season-so2, ensemble: r1i1p5f101, grid: gn}
+        - {dataset: GISS-nudge, project: CMIP6, activity: AerChemMIP, institute: NASA-GISS, exp: no-season-so2, ensemble: r1i1p5f103, grid: gn}
+        - {dataset: GISS-nudge, project: CMIP6, activity: AerChemMIP, institute: NASA-GISS, exp: reference, ensemble: r1i1p5f104, grid: gn}
 
 preprocessors:
   # Preprocessor for variables with vertical dimension. Ensure the variable has
