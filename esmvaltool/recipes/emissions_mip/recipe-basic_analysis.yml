@@ -37,15 +37,18 @@ preprocessors:
   preproc_sfc:
     extract_levels:
       levels: 0.949999988079071
-      scheme: linear_horizontal_extrapolate_vertical
-      coordinate: air_pressure
+      scheme: linear
+      coordinate: atmosphere_hybrid_sigma_pressure_coordinate 
     regrid:
       target_grid: 1x1
       scheme: linear
-    annual_statistics:
-      operator: mean
+# As per: https://github.com/ESMValGroup/ESMValTool/issues/1690 the annual mean doesn't
+# work due to a bug in iris
+ #    annual_statistics:
+ #     operator: mean
   # Preprocessor for variables with no vertical dimension.
-  # * Regrid onto 1 deg x 1 deg grid.
+  # * Regrid onto 1 deg x 1 
+  # deg grid.
   # * Compute annual mean.
   preproc_nolev:
     regrid:
