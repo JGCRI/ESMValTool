@@ -25,24 +25,28 @@ class Variables:
     """
     Simple class to hold some variable metadata.
     """
-    emiso2 = {'cmor_long_name': 'total emission rate of so2',
-              'cesm_long_name': 'surface flux of so2',
+    emiso2 = {'cmor_long_name': 'total emission rate of SO2',
+              'cesm_long_name': 'surface flux of SO2',
               'mip': 'AERmon',
               'ndim': 3}
-    emiso4 = {'cmor_long_name': 'total emission rate of so4',
-              'cesm_long_name': 'surface flux of so4',
+    emiso4 = {'cmor_long_name': 'total emission rate of SO4',
+              'cesm_long_name': 'surface flux of SO4',
               'mip': 'AERmon',
               'ndim': 3}
-    mmrso4 = {'cmor_long_name': 'mass mixing ratio of aerosol so4',
-              'cesm_long_name': 'concentration of so4',
+    emibc = {'cmor_long_name': 'total emission rate of BC',
+              'cesm_long_name': 'surface flux of BC',
+              'mip': 'AERmon',
+              'ndim': 3}
+    mmrso4 = {'cmor_long_name': 'mass mixing ratio of aerosol SO4',
+              'cesm_long_name': 'concentration of SO4',
               'mip': 'AERmon',
               'ndim': 4}
-    emiso2 = {'cmor_long_name': 'total emission rate of so2',
-              'cesm_long_name': 'surface flux of so2',
+    mmrbc = {'cmor_long_name': 'mass mixing ratio of black carbon aerosol',
+              'cesm_long_name': 'concentration of BC',
               'mip': 'AERmon',
-              'ndim': 3}
-    so2 =    {'cmor_long_name': 'so2 volume mixing ratio',
-              'cesm_long_name': 'so2 concentration',
+              'ndim': 4}
+    so2 =    {'cmor_long_name': 'SO2 volume mixing ratio',
+              'cesm_long_name': 'concentration of SO2',
               'mip': 'AERmon',
               'ndim': 4}
     rlut =   {'cmor_long_name': 'TOA outgoing longwave radiation',
@@ -50,10 +54,57 @@ class Variables:
               'mip': 'Amon',
               'ndim': 3}
     rsut =   {'cmor_long_name': 'TOA outgoing shortwave radiation',
-              'cesm_long_name': 'upwelling solar flux at TOA',
+              'cesm_long_name': 'upwelling shortwave flux at TOA',
               'mip': 'Amon',
               'ndim': 3}
-
+    rsdt =   {'cmor_long_name': 'TOA incident shortwave radiation',
+              'cesm_long_name': 'incident shortwave flux at TOA',
+              'mip': 'Amon',
+              'ndim': 3}
+    rlutcs =   {'cmor_long_name': 'TOA outgoing clear-sky longwave radiation',
+              'cesm_long_name': 'upwelling clear-sky longwave flux at TOA',
+              'mip': 'Amon',
+              'ndim': 3}
+    rsutcs =   {'cmor_long_name': 'TOA outgoing clear-sky shortwave radiation',
+              'cesm_long_name': 'upwelling clear-sky shortwave flux at TOA',
+              'mip': 'Amon',
+              'ndim': 3}
+    od550aer = {'cmor_long_name': 'Ambient Aerosol Optical Thickness at 550nm',
+              'cesm_long_name': 'ambient aerosol optical thickness at 550nm',
+              'mip': 'AERmon',
+              'ndim': 3}
+    drybc = {'cmor_long_name': 'Dry Deposition Rate of Black Carbon Aerosol Mass',
+              'cesm_long_name': 'dry deposition rate of BC',
+              'mip': 'AERmon',
+              'ndim': 3}
+    wetbc = {'cmor_long_name': 'Wet Deposition Rate of Black Carbon Aerosol Mass',
+              'cesm_long_name': 'wet deposition rate of BC',
+              'mip': 'AERmon',
+              'ndim': 3}
+    dryso2 = {'cmor_long_name': 'Dry Deposition Rate of SO2',
+              'cesm_long_name': 'dry deposition rate of SO2',
+              'mip': 'AERmon',
+              'ndim': 3}
+    wetso2 = {'cmor_long_name': 'Wet Deposition Rate of SO2',
+              'cesm_long_name': 'wet deposition rate of SO2',
+              'mip': 'AERmon',
+              'ndim': 3}
+    dryso4 = {'cmor_long_name': 'Dry Deposition Rate of SO4',
+              'cesm_long_name': 'dry deposition rate of SO4',
+              'mip': 'AERmon',
+              'ndim': 3}
+    wetso4 = {'cmor_long_name': 'Wet Deposition Rate of SO4',
+              'cesm_long_name': 'wet deposition rate of SO4',
+              'mip': 'AERmon',
+              'ndim': 3}
+    cltc = {'cmor_long_name': 'Convective Cloud Cover Percentage',
+              'cesm_long_name': 'convective cloud cover percentage',
+              'mip': 'AERmon',
+              'ndim': 4}
+    clt =   {'cmor_long_name': 'Total Cloud Cover Percentage',
+              'cesm_long_name': 'total cloud cover percentage',
+              'mip': 'Amon',
+              'ndim': 3}
 
 def group_meta_by_var(meta_dict):
     """
@@ -111,7 +162,7 @@ def group_vars_diff(var_list):
         Ex: {GISS-base : {'ref' : ESMVariable obj, 'pert' : ESMVariable obj}}
     """
     def _add_obj_to_dict(group_dict, var_obj):
-        if var_obj.exp == 'reference':
+        if var_obj.exp == 'reference' or var_obj.exp == 'nudge-ref' or var_obj.exp == 'BASE' or var_obj.exp == 'base' or var_obj.exp == 'BW1950' or var_obj.exp == 'nudge-ref-1950':
             group_dict[var_obj.dataset]['ref'] = var_obj
         else: 
             group_dict[var_obj.dataset]['pert'] = var_obj
@@ -199,7 +250,7 @@ def save_cube(cube, out_file):
             df.to_csv(out_file, sep=',', header=True, index=False)
 
 
-def save_plot_data(var_name, years, var_data, plt_config, plt_type=None):
+def save_plot_data(var_name, years, var_data, units, plt_config, plt_type=None):
     """
     Write processed variable data to CSV. 
     
@@ -224,8 +275,8 @@ def save_plot_data(var_name, years, var_data, plt_config, plt_type=None):
     """
     import pandas as pd
     # Combine the years & variable arrays into a Pandas DF to use Pandas csv writing funcs.
-    var_dict = {'year': years, 'value': var_data}
-    df = pd.DataFrame(var_dict, columns=['year', 'value'])
+    var_dict = {'variable': var_name, 'year': years, 'value': var_data, 'unit': units}
+    df = pd.DataFrame(var_dict, columns=['variable', 'year', 'value', 'unit'])
     f_name = get_default_plot_name(var_name, plt_config, plt_type=plt_type, strp_ext=True)
     # Append model config & file extension to the filename
     f_name = '{}-{}.csv'.format(f_name, plt_config['config_alias'])
@@ -261,8 +312,8 @@ class PlotStyle:
     """
     Simple class to hold pyplot line styles and colors.
     """
-    styles = ['dotted', 'dashed', 'dashdot'] * 2  # Line styles (6)
-    colors = ['b', 'g', 'r', 'c', 'm', 'k']       # Line colors (6)
+    styles = ['dotted', 'dashed', 'dashdot'] * 3  # Line styles (9)
+    colors = ['tab:blue', 'tab:orange', 'tab:green', 'tab:red', 'tab:purple', 'tab:brown', 'tab:gray', 'tab:olive', 'tab:cyan'] # Line colors (9)
     
     
 def plot_timeseries_diff(vars_to_plot, plt_config):
@@ -310,7 +361,7 @@ def plot_timeseries(vars_to_plot, plt_config, plt_type=None):
     years = calc_year_span(vars_to_plot[0].start_year, vars_to_plot[0].end_year)
     units = vars_to_plot[0].units
     var_short = vars_to_plot[0].short_name
-    var_long = getattr(Variables, var_short)['cmor_long_name']
+    var_long = getattr(Variables, var_short)['cesm_long_name']
     # Iterate over the variable objects & plot.
     if plt_type == 'diff':
         # Model config difference plot.
@@ -323,7 +374,7 @@ def plot_timeseries(vars_to_plot, plt_config, plt_type=None):
             if plt_config['write_data']:
                 # Write var arrays to csv
                 plt_config['config_alias'] = dataset
-                save_plot_data(var_short, years, diff_cube.data, plt_config, plt_type='diff')
+                save_plot_data(var_short, years, diff_cube.data, units, plt_config, plt_type='diff')
         default_plt_name = get_default_plot_name(var_short, plt_config, plt_type='diff')
     else:
         # Variable timeseries plot.
@@ -333,7 +384,7 @@ def plot_timeseries(vars_to_plot, plt_config, plt_type=None):
             if plt_config['write_data']:
                 # Write var arrays to csv
                 plt_config['config_alias'] = var_obj.alias
-                save_plot_data(var_short, years, var_obj.cube.data, plt_config)
+                save_plot_data(var_short, years, var_obj.cube.data, units, plt_config)
         default_plt_name = get_default_plot_name(var_short, plt_config)
     plt.xlabel('Year')
     plt.ylabel('{} ({})'.format(var_short, units))
@@ -376,9 +427,9 @@ def get_default_plot_name(var_name, plt_config, plt_type=None, strp_ext=False):
         returning. Default is False.
     """
     if plt_type == 'diff':
-        plt_name = 'time_series-diff-{}-{}.pdf'.format(plt_config['time_interval'].capitalize(), var_name)
+        plt_name = 'timeseries-diff-{}-{}'.format(plt_config['time_interval'].capitalize(), var_name)
     else:
-        plt_name = 'time_series-{}-{}.pdf'.format(plt_config['time_interval'].capitalize(), var_name)
+        plt_name = 'timeseries-{}-{}'.format(plt_config['time_interval'].capitalize(), var_name)
     return plt_name
 
 

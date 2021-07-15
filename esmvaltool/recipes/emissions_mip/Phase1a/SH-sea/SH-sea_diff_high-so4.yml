@@ -1,0 +1,370 @@
+documentation:
+  description: Analysis of reference model outputs for Emissions-MIP
+  authors:
+    - nicholson_matthew
+  maintainer:
+    - nicholson_matthew
+  references:
+    - esmvaltool
+  projects:
+    - esmval
+    - emissions_mip
+
+datasets:
+        - {dataset: E3SM-1-0, project: CMIP6, activity: CMIP, institute: E3SM-Project,
+                exp: nudge-ref, ensemble: r1i1p1f1, grid: gr}
+        - {dataset: E3SM-1-0, project: CMIP6, activity: CMIP, institute: E3SM-Project,
+                exp: nudge-high-SO4, ensemble: r1i1p1f1, grid: gr}
+        - {dataset: GISS-nudge, project: CMIP6, activity: AerChemMIP, institute:
+                NASA-GISS, exp: reference, ensemble: r1i1p5f104, grid: gn}
+        - {dataset: GISS-nudge, project: CMIP6, activity: AerChemMIP, institute:
+                NASA-GISS, exp: high-SO4, ensemble: r1i1p5f1, grid: gn}
+        - {dataset: MIROC-SPRINTARS, project: MIROC, activity: EmiMIP, institute:
+                RIAM, exp: BASE, ensemble: r1i1p1f1, grid: gr}
+        - {dataset: MIROC-SPRINTARS, project: MIROC, activity: EmiMIP, institute:
+                RIAM, exp: SO4H, ensemble: r1i1p1f1, grid: gr}
+        - {dataset: GFDL, project: GFDL, activity: EmiMIP, institute: E3SM-Project,
+                exp: base, ensemble: r1i1p1f1, grid: gr}
+        - {dataset: GFDL, project: GFDL, activity: EmiMIP, institute: E3SM-Project,
+                exp: high-so4, ensemble: r1i1p1f1, grid: gr}
+
+preprocessors:
+  preproc_sfc:
+    extract_levels:
+      levels: 100000.0
+      scheme: linear_horizontal_extrapolate_vertical
+    regrid:
+      target_grid: 1x1
+      scheme: linear
+    annual_statistics:
+      operator: mean
+    mask_landsea:
+      mask_out: land_n-sea
+  preproc_nolev:
+    regrid:
+      target_grid: 1x1
+      scheme: linear
+    annual_statistics:
+      operator: mean
+    mask_landsea:
+      mask_out: land_n-sea
+
+diagnostics:
+  Emissions_MIP_analysis:
+    description: Model variable outputs
+    themes:
+      - phys
+    realms:
+      - atmos
+    variables:
+      mmrso4:
+        preprocessor: preproc_sfc
+        mip: AERmon
+        start_year: 2001
+        end_year: 2004
+        additional_datasets:
+          - {dataset: CESM-1-0, project: CMIP6, activity: CMIP, institute: PNNL-WACCEM,
+            exp: nudge-ref, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: CESM-1-0, project: CMIP6, activity: CMIP, institute: PNNL-WACCEM,
+            exp: nudge-high-SO4, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: base, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: high-so4, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: OsloCTM3, project: OsloCTM3, activity: EmiMIP, institute: E3SM-Project,
+            exp: base, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: OsloCTM3, project: OsloCTM3, activity: EmiMIP, institute: E3SM-Project,
+            exp: high-so4, ensemble: r1i1p1f1, grid: gr}
+      mmrbc:
+        preprocessor: preproc_sfc
+        mip: AERmon
+        start_year: 2001
+        end_year: 2004
+        additional_datasets:
+          - {dataset: CESM-1-0, project: CMIP6, activity: CMIP, institute: PNNL-WACCEM,
+            exp: nudge-ref, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: CESM-1-0, project: CMIP6, activity: CMIP, institute: PNNL-WACCEM,
+            exp: nudge-high-SO4, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: base, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: high-so4, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: OsloCTM3, project: OsloCTM3, activity: EmiMIP, institute: E3SM-Project,
+            exp: base, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: OsloCTM3, project: OsloCTM3, activity: EmiMIP, institute: E3SM-Project,
+            exp: high-so4, ensemble: r1i1p1f1, grid: gr}
+      so2:
+        preprocessor: preproc_sfc
+        mip: AERmon
+        start_year: 2001
+        end_year: 2004
+        additional_datasets:
+          - {dataset: CESM-1-0, project: CMIP6, activity: CMIP, institute: PNNL-WACCEM,
+            exp: nudge-ref, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: CESM-1-0, project: CMIP6, activity: CMIP, institute: PNNL-WACCEM,
+            exp: nudge-high-SO4, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: base, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: high-so4, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: OsloCTM3, project: OsloCTM3, activity: EmiMIP, institute: E3SM-Project,
+            exp: base, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: OsloCTM3, project: OsloCTM3, activity: EmiMIP, institute: E3SM-Project,
+            exp: high-so4, ensemble: r1i1p1f1, grid: gr}
+      rlut:
+        preprocessor: preproc_nolev
+        mip: Amon
+        start_year: 2001
+        end_year: 2004
+        additional_datasets:
+          - {dataset: CESM-1-0, project: CMIP6, activity: CMIP, institute: PNNL-WACCEM,
+            exp: nudge-ref, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: CESM-1-0, project: CMIP6, activity: CMIP, institute: PNNL-WACCEM,
+            exp: nudge-high-SO4, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: base, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: high-so4, ensemble: r1i1p1f1, grid: gr}
+      rsut:
+        preprocessor: preproc_nolev
+        mip: Amon
+        start_year: 2001
+        end_year: 2004
+        additional_datasets:
+          - {dataset: CESM-1-0, project: CMIP6, activity: CMIP, institute: PNNL-WACCEM,
+            exp: nudge-ref, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: CESM-1-0, project: CMIP6, activity: CMIP, institute: PNNL-WACCEM,
+            exp: nudge-high-SO4, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: base, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: high-so4, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: OsloCTM3, project: OsloCTM3, activity: EmiMIP, institute: E3SM-Project,
+            exp: base, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: OsloCTM3, project: OsloCTM3, activity: EmiMIP, institute: E3SM-Project,
+            exp: high-so4, ensemble: r1i1p1f1, grid: gr}
+      rsdt:
+        preprocessor: preproc_nolev
+        mip: Amon
+        start_year: 2001
+        end_year: 2004
+        additional_datasets:
+          - {dataset: CESM-1-0, project: CMIP6, activity: CMIP, institute: PNNL-WACCEM,
+            exp: nudge-ref, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: CESM-1-0, project: CMIP6, activity: CMIP, institute: PNNL-WACCEM,
+            exp: nudge-high-SO4, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: base, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: high-so4, ensemble: r1i1p1f1, grid: gr}
+      rlutcs:
+        preprocessor: preproc_nolev
+        mip: Amon
+        start_year: 2001
+        end_year: 2004
+        additional_datasets:
+          - {dataset: CESM-1-0, project: CMIP6, activity: CMIP, institute: PNNL-WACCEM,
+            exp: nudge-ref, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: CESM-1-0, project: CMIP6, activity: CMIP, institute: PNNL-WACCEM,
+            exp: nudge-high-SO4, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: base, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: high-so4, ensemble: r1i1p1f1, grid: gr}
+      rsutcs:
+        preprocessor: preproc_nolev
+        mip: Amon
+        start_year: 2001
+        end_year: 2004
+        additional_datasets:
+          - {dataset: CESM-1-0, project: CMIP6, activity: CMIP, institute: PNNL-WACCEM,
+            exp: nudge-ref, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: CESM-1-0, project: CMIP6, activity: CMIP, institute: PNNL-WACCEM,
+            exp: nudge-high-SO4, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: base, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: high-so4, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: OsloCTM3, project: OsloCTM3, activity: EmiMIP, institute: E3SM-Project,
+            exp: base, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: OsloCTM3, project: OsloCTM3, activity: EmiMIP, institute: E3SM-Project,
+            exp: high-so4, ensemble: r1i1p1f1, grid: gr}
+      emiso2:
+        preprocessor: preproc_nolev
+        mip: AERmon
+        start_year: 2001
+        end_year: 2004
+        additional_datasets:
+          - {dataset: CESM-1-0, project: CMIP6, activity: CMIP, institute: PNNL-WACCEM,
+            exp: nudge-ref, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: CESM-1-0, project: CMIP6, activity: CMIP, institute: PNNL-WACCEM,
+            exp: nudge-high-SO4, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: base, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: high-so4, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: OsloCTM3, project: OsloCTM3, activity: EmiMIP, institute: E3SM-Project,
+            exp: base, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: OsloCTM3, project: OsloCTM3, activity: EmiMIP, institute: E3SM-Project,
+            exp: high-so4, ensemble: r1i1p1f1, grid: gr}
+      emibc:
+        preprocessor: preproc_nolev
+        mip: AERmon
+        start_year: 2001
+        end_year: 2004
+        additional_datasets:
+          - {dataset: CESM-1-0, project: CMIP6, activity: CMIP, institute: PNNL-WACCEM,
+            exp: nudge-ref, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: CESM-1-0, project: CMIP6, activity: CMIP, institute: PNNL-WACCEM,
+            exp: nudge-high-SO4, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: base, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: high-so4, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: OsloCTM3, project: OsloCTM3, activity: EmiMIP, institute: E3SM-Project,
+            exp: base, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: OsloCTM3, project: OsloCTM3, activity: EmiMIP, institute: E3SM-Project,
+            exp: high-so4, ensemble: r1i1p1f1, grid: gr}
+      drybc:
+        preprocessor: preproc_nolev
+        mip: AERmon
+        start_year: 2001
+        end_year: 2004
+        additional_datasets:
+          - {dataset: CESM-1-0, project: CMIP6, activity: CMIP, institute: PNNL-WACCEM,
+            exp: nudge-ref, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: CESM-1-0, project: CMIP6, activity: CMIP, institute: PNNL-WACCEM,
+            exp: nudge-high-SO4, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: base, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: high-so4, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: OsloCTM3, project: OsloCTM3, activity: EmiMIP, institute: E3SM-Project,
+            exp: base, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: OsloCTM3, project: OsloCTM3, activity: EmiMIP, institute: E3SM-Project,
+            exp: high-so4, ensemble: r1i1p1f1, grid: gr}
+      wetbc:
+        preprocessor: preproc_nolev
+        mip: AERmon
+        start_year: 2001
+        end_year: 2004
+        additional_datasets:
+          - {dataset: CESM-1-0, project: CMIP6, activity: CMIP, institute: PNNL-WACCEM,
+            exp: nudge-ref, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: CESM-1-0, project: CMIP6, activity: CMIP, institute: PNNL-WACCEM,
+            exp: nudge-high-SO4, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: base, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: high-so4, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: OsloCTM3, project: OsloCTM3, activity: EmiMIP, institute: E3SM-Project,
+            exp: base, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: OsloCTM3, project: OsloCTM3, activity: EmiMIP, institute: E3SM-Project,
+            exp: high-so4, ensemble: r1i1p1f1, grid: gr}
+      dryso2:
+        preprocessor: preproc_nolev
+        mip: AERmon
+        start_year: 2001
+        end_year: 2004
+        additional_datasets:
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: base, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: high-so4, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: OsloCTM3, project: OsloCTM3, activity: EmiMIP, institute: E3SM-Project,
+            exp: base, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: OsloCTM3, project: OsloCTM3, activity: EmiMIP, institute: E3SM-Project,
+            exp: high-so4, ensemble: r1i1p1f1, grid: gr}
+      wetso2:
+        preprocessor: preproc_nolev
+        mip: AERmon
+        start_year: 2001
+        end_year: 2004
+        additional_datasets:
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: base, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: high-so4, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: OsloCTM3, project: OsloCTM3, activity: EmiMIP, institute: E3SM-Project,
+            exp: base, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: OsloCTM3, project: OsloCTM3, activity: EmiMIP, institute: E3SM-Project,
+            exp: high-so4, ensemble: r1i1p1f1, grid: gr}
+      dryso4:
+        preprocessor: preproc_nolev
+        mip: AERmon
+        start_year: 2001
+        end_year: 2004
+        additional_datasets:
+          - {dataset: CESM-1-0, project: CMIP6, activity: CMIP, institute: PNNL-WACCEM,
+            exp: nudge-ref, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: CESM-1-0, project: CMIP6, activity: CMIP, institute: PNNL-WACCEM,
+            exp: nudge-high-SO4, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: base, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: high-so4, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: OsloCTM3, project: OsloCTM3, activity: EmiMIP, institute: E3SM-Project,
+            exp: base, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: OsloCTM3, project: OsloCTM3, activity: EmiMIP, institute: E3SM-Project,
+            exp: high-so4, ensemble: r1i1p1f1, grid: gr}
+      wetso4:
+        preprocessor: preproc_nolev
+        mip: AERmon
+        start_year: 2001
+        end_year: 2004
+        additional_datasets:
+          - {dataset: CESM-1-0, project: CMIP6, activity: CMIP, institute: PNNL-WACCEM,
+            exp: nudge-ref, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: CESM-1-0, project: CMIP6, activity: CMIP, institute: PNNL-WACCEM,
+            exp: nudge-high-SO4, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: base, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: high-so4, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: OsloCTM3, project: OsloCTM3, activity: EmiMIP, institute: E3SM-Project,
+            exp: base, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: OsloCTM3, project: OsloCTM3, activity: EmiMIP, institute: E3SM-Project,
+            exp: high-so4, ensemble: r1i1p1f1, grid: gr}
+      od550aer:
+        preprocessor: preproc_nolev
+        mip: AERmon
+        start_year: 2001
+        end_year: 2004
+        additional_datasets:
+          - {dataset: CESM-1-0, project: CMIP6, activity: CMIP, institute: PNNL-WACCEM,
+            exp: nudge-ref, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: CESM-1-0, project: CMIP6, activity: CMIP, institute: PNNL-WACCEM,
+            exp: nudge-high-SO4, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: base, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: high-so4, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: OsloCTM3, project: OsloCTM3, activity: EmiMIP, institute: E3SM-Project,
+            exp: base, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: OsloCTM3, project: OsloCTM3, activity: EmiMIP, institute: E3SM-Project,
+            exp: high-so4, ensemble: r1i1p1f1, grid: gr}
+      cltc:
+        preprocessor: preproc_nolev
+        mip: AERmon
+        start_year: 2001
+        end_year: 2004
+      clt:
+        preprocessor: preproc_nolev
+        mip: Amon
+        start_year: 2001
+        end_year: 2004
+        additional_datasets:
+          - {dataset: CESM-1-0, project: CMIP6, activity: CMIP, institute: PNNL-WACCEM,
+            exp: nudge-ref, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: CESM-1-0, project: CMIP6, activity: CMIP, institute: PNNL-WACCEM,
+            exp: nudge-high-SO4, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: base, ensemble: r1i1p1f1, grid: gr}
+          - {dataset: NorESM2, project: NorESM2, activity: EmiMIP, institute: E3SM-Project,
+            exp: high-so4, ensemble: r1i1p1f1, grid: gr}
+    scripts:
+      initial_analysis_output:
+        script: /qfs/people/ahsa361/ESMValTool/esmvaltool/diag_scripts/emissions_mip/initial_analysis-giss-diff.py
+        quickplot:
+          plot_type: pcolormesh
+

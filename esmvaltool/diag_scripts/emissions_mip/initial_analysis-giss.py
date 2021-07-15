@@ -44,9 +44,9 @@ def main(cfg):
     # Plot configuration dictionary.
     plt_config = {'ggplot'  : True,
                   'out_dir' : cfg['plot_dir'],
-                  'plt_name': 'time_series-initial_analysis-giss-{}.pdf',
+                  'plt_name': 'timeseries-{}.pdf',
                   'time_interval': 'annual',
-                  'title'   : 'Annual Area Average - {}',
+                  'title'   : 'global average - {}',
                   'write_data': True
                   }
     file_dict = group_metadata(cfg['input_data'].values(), 'dataset')
